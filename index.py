@@ -1,6 +1,6 @@
 # Lista para almacenar los productos
 inventario = []
-
+##holi
 # Función para ver el inventario
 def ver_inventario():
     ...
