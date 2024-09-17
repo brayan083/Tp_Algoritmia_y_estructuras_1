@@ -1,6 +1,6 @@
 # Lista para almacenar los productos
 inventario = []
-##holi
+
 # Función para ver el inventario
 def ver_inventario():
     ...
@@ -33,7 +33,7 @@ def agregar_producto(codigo, nombre, cantidad, precio, fecha):
 def buscar_producto(codigo):
     ...
     for producto in inventario:
-        if producto["codigo"] == codigo:
+        if producto["codigo"] == codigo or  producto["nombre"] == codigo:
             return producto
     return None
 
@@ -46,6 +46,15 @@ def actualizar_cantidad(codigo, nueva_cantidad):
         return True
     return False
 
+# 
+def actualizar_precio(codigo, nuevo_precio):
+     producto = buscar_producto(codigo)
+     if producto:
+         producto["precio"] = nuevo_precio
+         return True
+     return False
+
+
 # Función para mostrar el menú de opciones por pantalla
 def menu_opciones():
     print("\n --------------------------------")
@@ -54,6 +63,7 @@ def menu_opciones():
     print("| 2. Agregar producto            |")
     print("| 3. Buscar producto             |")
     print("| 4. Actualizar cantidad         |")
+    print("| 5. Actualizar precio           |")
     print("| -1. Salir                      |")
     print(" --------------------------------\n")
 
@@ -103,6 +113,17 @@ def main():
             else:
                 print("Producto no encontrado")
             continuar()
+        
+        if opcion == "5":
+            codigo = input("Ingrese el código: ")
+            nuevo_precio = int(input("Ingrese el precio nuevo: "))
+            if actualizar_precio(codigo, nuevo_precio):
+                print("Precio actualizada")
+            else:
+                print("Producto no encontrado")
+            continuar()
+        
+        
 
         if opcion == "-1":
             Start = False
@@ -129,3 +150,4 @@ main()
         'precio': 15.0
     }
 ]
+
