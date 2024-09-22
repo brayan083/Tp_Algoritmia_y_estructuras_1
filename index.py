@@ -1,7 +1,7 @@
-# Lista para almacenar los productos
+#Lista para almacenar los productos
 inventario = []
 
-# Función para ver el inventario
+#Función para ver el inventario
 def ver_inventario():
     ...
     print("Inventario:")
@@ -14,7 +14,7 @@ def ver_inventario():
         print(f"Fecha: {producto['fecha'][0]}-{producto['fecha'][1]}-{producto['fecha'][2]}")
         print("---------")
 
-# Función para agregar un producto
+#Función para agregar un producto
 def agregar_producto(codigo, nombre, cantidad, precio, fecha):
     ...
     dia, mes, anio = fecha.split("-")
@@ -29,7 +29,7 @@ def agregar_producto(codigo, nombre, cantidad, precio, fecha):
     }
     inventario.append(producto)
 
-# Función para buscar un producto
+#Función para buscar un producto
 def buscar_producto(codigo):
     ...
     for producto in inventario:
@@ -37,7 +37,7 @@ def buscar_producto(codigo):
             return producto
     return None
 
-# Función para actualizar la cantidad de un producto
+#Función para actualizar la cantidad de un producto
 def actualizar_cantidad(codigo, nueva_cantidad):
     ...
     producto = buscar_producto(codigo)
@@ -46,7 +46,7 @@ def actualizar_cantidad(codigo, nueva_cantidad):
         return True
     return False
 
-# 
+#Funcion que actualiza el precio de un producto
 def actualizar_precio(codigo, nuevo_precio):
      producto = buscar_producto(codigo)
      if producto:
@@ -55,7 +55,7 @@ def actualizar_precio(codigo, nuevo_precio):
      return False
 
 
-# Función para mostrar el menú de opciones por pantalla
+#Función para mostrar el menu de opciones por pantalla
 def menu_opciones():
     print("\n --------------------------------")
     print("| Menú                           |")
@@ -67,11 +67,11 @@ def menu_opciones():
     print("| -1. Salir                      |")
     print(" --------------------------------\n")
 
-# Función para continuar con la ejecución del programa
+#Función que continua con la ejecución del programa
 def continuar():
     input("Presione enter para continuar...")
 
-# Función principal del programa
+#Función principal del programa
 def main(): 
     ...
     agregar_producto("002", "Leche", 30, 29.99, "02-01-2024")
@@ -135,7 +135,7 @@ def main():
 main()
     
 
-# Estructura de datos:
+#Estructura de datos
 [
     {
         'codigo': '3', 
