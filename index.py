@@ -96,11 +96,13 @@ def main():
             agregar_producto(codigo, nombre, cantidad, precio, fecha)
             continuar()
             
-        if opcion == "3":
+        if opcion == "3": #Buscar producto
             codigo = input("Ingrese el código: ")
             producto = buscar_producto(codigo)
             if producto:
-                print(f"Producto encontrado: {producto['nombre']}")
+                print(f"Producto encontrado:")
+                for clave,valor in producto.items():
+                    print(f"{clave.capitalize()}: {valor}")
             else:
                 print("Producto no encontrado")
             continuar()
