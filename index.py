@@ -1,7 +1,7 @@
-#Lista para almacenar los productos
+# Lista para almacenar los productos
 inventario = []
 
-#Función para ver el inventario
+# Función para ver el inventario
 def ver_inventario():
     ...
     print("Inventario:")
@@ -12,10 +12,11 @@ def ver_inventario():
         print(f"Cantidad: {producto['cantidad']}")
         print(f"Precio: {producto['precio']}")
         print(f"Fecha: {producto['fecha'][0]}-{producto['fecha'][1]}-{producto['fecha'][2]}")
+        print(f"Proveedor: {producto['proveedor']}")
         print("---------")
 
-#Función para agregar un producto
-def agregar_producto(codigo, nombre, cantidad, precio, fecha):
+# Función para agregar un producto
+def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
     ...
     dia, mes, anio = fecha.split("-")
     new_date = (dia, mes, anio)
@@ -25,19 +26,20 @@ def agregar_producto(codigo, nombre, cantidad, precio, fecha):
         "nombre": nombre,
         "cantidad": cantidad,
         "precio": precio,
-        "fecha": new_date
+        "fecha": new_date,
+        "proveedor": proveedor
     }
     inventario.append(producto)
 
-#Función para buscar un producto
+# Función para buscar un producto
 def buscar_producto(codigo):
     ...
     for producto in inventario:
-        if producto["codigo"] == codigo or  producto["nombre"] == codigo:
+        if producto["codigo"] == codigo:
             return producto
     return None
 
-#Función para actualizar la cantidad de un producto
+# Función para actualizar la cantidad de un producto
 def actualizar_cantidad(codigo, nueva_cantidad):
     ...
     producto = buscar_producto(codigo)
@@ -46,16 +48,17 @@ def actualizar_cantidad(codigo, nueva_cantidad):
         return True
     return False
 
-#Funcion que actualiza el precio de un producto
-def actualizar_precio(codigo, nuevo_precio):
-     producto = buscar_producto(codigo)
-     if producto:
-         producto["precio"] = nuevo_precio
-         return True
-     return False
 
+#Funcion para borrar un producto
+def borrar_producto(codigo):
+    inventario_nuevo = []
+    for producto in inventario:
+        if producto["codigo"] != codigo:
+            inventario_nuevo.append(producto)
+    inventario[:] = inventario_nuevo
+    continuar()
 
-#Función para mostrar el menu de opciones por pantalla
+# Función para mostrar el menú de opciones por pantalla
 def menu_opciones():
     print("\n --------------------------------")
     print("| Menú                           |")
@@ -63,19 +66,19 @@ def menu_opciones():
     print("| 2. Agregar producto            |")
     print("| 3. Buscar producto             |")
     print("| 4. Actualizar cantidad         |")
-    print("| 5. Actualizar precio           |")
+    print("| 6. Borrar producto             |")
     print("| -1. Salir                      |")
     print(" --------------------------------\n")
 
-#Función que continua con la ejecución del programa
+# Función para continuar con la ejecución del programa
 def continuar():
     input("Presione enter para continuar...")
 
-#Función principal del programa
+# Función principal del programa
 def main(): 
     ...
-    agregar_producto("002", "Leche", 30, 29.99, "02-01-2024")
-    agregar_producto("001", "Pan", 50, 15.99, "01-01-2024")
+    agregar_producto("002", "Leche", 30, 29.99, 'La serenisima', "02-01-2024")
+    agregar_producto("001", "Pan", 50, 15.99, 'Arcor', "01-01-2024")
     Start = True
     while Start:
 
@@ -93,7 +96,8 @@ def main():
             cantidad = int(input("Ingrese la cantidad: "))
             precio = float(input("Ingrese el precio: "))
             fecha = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
-            agregar_producto(codigo, nombre, cantidad, precio, fecha)
+            proveedor = input("Ingrese el nombre del Proveedor: ")
+            agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha)
             continuar()
             
         if opcion == "3":
@@ -112,19 +116,13 @@ def main():
                 print("Cantidad actualizada")
             else:
                 print("Producto no encontrado")
-            continuar()
+            continuar()    
         
-        if opcion == "5":
+        #Opcion de borrado por codigo
+        if opcion == "6":
             codigo = input("Ingrese el código: ")
-            nuevo_precio = int(input("Ingrese el precio nuevo: "))
-            if actualizar_precio(codigo, nuevo_precio):
-                print("Precio actualizada")
-            else:
-                print("Producto no encontrado")
-            continuar()
-        
-        
-
+            borrar_producto(codigo)
+            
         if opcion == "-1":
             Start = False
             print("Saliendo del programa... ¡Hasta luego!")
@@ -133,21 +131,21 @@ def main():
             print("Opción inválida")
             
 main()
-    
 
-#Estructura de datos
-[
-    {
-        'codigo': '3', 
-        'nombre': 'pan', 
-        'cantidad': 12, 
-        'precio': 20.0
-    },
-    {
-        'codigo': '2', 
-        'nombre': 'leche', 
-        'cantidad': 5, 
-        'precio': 15.0
-    }
-]
-
+# Estructura de datos:
+# [
+#     {
+#         'codigo': '3', 
+#         'nombre': 'pan', 
+#         'cantidad': 12, 
+#         'precio': 20.0,
+#         'proveedor': 'Panaderia UADE'
+#     },
+#     {
+#         'codigo': '2', 
+#         'nombre': 'leche', 
+#         'cantidad': 5, 
+#         'precio': 15.0,
+#         'proveedor': 'UADE cuando es epoca de parcial'
+#     }
+# ]
