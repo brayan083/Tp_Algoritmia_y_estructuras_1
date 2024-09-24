@@ -4,6 +4,9 @@ inventario = []
 # Set para almacenar los códigos de productos únicos
 codigos_unicos = set()
 
+# Set para almacenar los nombres de productos únicos
+productos_unicos = set()
+
 # Función para ver el inventario
 def ver_inventario():
     ...
@@ -25,6 +28,10 @@ def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
         print("Error: El código del producto ya existe.")
         return
     
+    if nombre in productos_unicos:
+        print("Error: El código del producto ya existe.")
+        return
+    
     dia, mes, anio = fecha.split("-")
     new_date = (dia, mes, anio)
     
@@ -38,6 +45,7 @@ def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
     }
     inventario.append(producto)
     codigos_unicos.add(codigo)
+    productos_unicos.add(nombre)
 
 # Función para buscar un producto
 def buscar_producto(codigo):
@@ -64,13 +72,17 @@ def actualizar_cantidad(codigo, nueva_cantidad):
     return False
 
 #Funcion para borrar un producto
-def borrar_producto(codigo):
-    inventario_nuevo = []
-    for producto in inventario:
-        if producto["codigo"] != codigo:
-            inventario_nuevo.append(producto)
-    inventario[:] = inventario_nuevo
-    continuar()
+def borrar_producto(dato): 
+    
+    producto_eliminar = Buscarpalabras(dato)
+    confirmar = int(input(f"¿Desea eliminar el producto {producto_eliminar}? 1 para SI, 2 para NO: "))
+    if confirmar == 1:
+        inventario_nuevo = []
+        for producto in inventario:
+            if producto["codigo"] != dato and producto["nombre"] != dato:
+                inventario_nuevo.append(producto)
+        inventario[:] = inventario_nuevo
+        continuar()
     
 # Función para contar el número total de productos en el inventario
 def reporte_total_productos():
@@ -228,9 +240,10 @@ def main():
         
         #Opcion de borrado por codigo
         if opcion == "6":
-            codigo = input("Ingrese el código: ")
-            borrar_producto(codigo)
-            
+            metodo = input("Ingrese el código o nombre del producto a eliminar: ")
+            borrar_producto(metodo)
+           
+        # Op 
         if opcion == "-1":
             Start = False
             print("Saliendo del programa... ¡Hasta luego!")
