@@ -75,6 +75,10 @@ def actualizar_cantidad(codigo, nueva_cantidad):
 def borrar_producto(dato): 
     
     producto_eliminar = Buscarpalabras(dato)
+    if producto_eliminar == None:
+        print("Producto no encontrado")
+        continuar()
+        return
     confirmar = int(input(f"¿Desea eliminar el producto {producto_eliminar}? 1 para SI, 2 para NO: "))
     if confirmar == 1:
         inventario_nuevo = []
@@ -180,11 +184,11 @@ def main():
             continuar()
         
         if opcion == "3": #Buscar producto
-            codigo = input("Ingrese el código: ")
+            codigo = input("Ingrese el código o el nombre: ")
             producto = Buscarpalabras(codigo) #me devuelve una lista con los productosencontrados
             #
             # print(producto) #imprime lista
-            if producto: #?
+            if producto: 
                 print(f"Producto encontrado:")
                 for i in producto: #va pasando i por i agarrando diccionarios completos
                     for clave,valor in i.items(): #agarra el diccionario de i en esa posicion y la muestra
@@ -234,7 +238,7 @@ def main():
                 if opcion_reporte == "-1":
                     bandera = False
                 
-                if int(opcion_reporte) not in range(1, 4) and opcion_reporte != "-1":
+                if int(opcion_reporte) not in range(1, 5) and opcion_reporte != "-1":
                     print("Opción inválida")
 
         
