@@ -37,8 +37,8 @@ def buscar_producto(codigo):
             return producto
     return None
 
-def Buscarpalabras (palabra):
-    productosencontrados = [producto  for producto in inventario if producto['nombre']==palabra or producto["codigo"] == palabra ]
+def Buscarpalabras(palabra):
+    productosencontrados = [producto for producto in inventario if producto['nombre'].lower() == palabra.lower() or str(producto["codigo"]) == palabra]
     if productosencontrados: 
         return productosencontrados
     return None
@@ -106,9 +106,8 @@ def main():
         if opcion == "3": #Buscar producto
             codigo = input("Ingrese el código: ")
             producto = Buscarpalabras(codigo) #me devuelve una lista con los productosencontrados
-            #
             # print(producto) #imprime lista
-            if producto: #?
+            if producto: 
                 print(f"Producto encontrado:")
                 for i in producto: #va pasando i por i agarrando diccionarios completos
                     for clave,valor in i.items(): #agarra el diccionario de i en esa posicion y la muestra
@@ -136,8 +135,28 @@ def main():
             else:
                 print("Producto no encontrado")
             continuar()
-        
-        
+            
+        if opcion == "9":
+
+            palabra = input("Ingrese código o nombre de producto: ") 
+            productos_encontrados = Buscarpalabras(palabra)  # Busca el producto
+            
+            if productos_encontrados:  # Si se encuentran productos
+                producto_eliminar = productos_encontrados[0]  # Tomar el primer producto encontrado (puedes cambiar esto si quieres manejar varios productos)
+                
+                confirmar = int(input(f"¿Desea eliminar el producto {producto_eliminar}? 1 para SI, 2 para NO: "))
+                if confirmar == 1:
+                    inventario_nuevo = [producto for producto in inventario if producto["nombre"] != producto_eliminar["nombre"]]
+                    inventario[:] = inventario_nuevo  # Actualizar el inventario
+                    print(f"El producto {producto_eliminar['nombre']} ha sido eliminado.")
+                    continuar()
+                else:
+                    print("Operación cancelada.")
+                    continuar()
+            else:
+                print("Producto no encontrado.")
+                continuar()
+
 
         if opcion == "-1":
             Start = False
