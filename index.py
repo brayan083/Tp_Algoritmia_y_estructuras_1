@@ -39,6 +39,12 @@ def buscar_producto(codigo):
             return producto
     return None
 
+def Buscarpalabras (palabra):
+    productosencontrados = [producto  for producto in inventario if producto['nombre']==palabra or producto["codigo"] == palabra ]
+    if productosencontrados: 
+        return productosencontrados
+    return None
+
 # Función para actualizar la cantidad de un producto
 def actualizar_cantidad(codigo, nueva_cantidad):
     ...
@@ -100,14 +106,22 @@ def main():
             agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha)
             continuar()
             
-        if opcion == "3":
+            
+        if opcion == "3": #Buscar producto
             codigo = input("Ingrese el código: ")
-            producto = buscar_producto(codigo)
-            if producto:
-                print(f"Producto encontrado: {producto['nombre']}")
+            producto = Buscarpalabras(codigo) #me devuelve una lista con los productosencontrados
+            #
+            # print(producto) #imprime lista
+            if producto: #?
+                print(f"Producto encontrado:")
+                for i in producto: #va pasando i por i agarrando diccionarios completos
+                    for clave,valor in i.items(): #agarra el diccionario de i en esa posicion y la muestra
+                        print(f"{clave.capitalize()}: {valor}")
+                continuar()
             else:
                 print("Producto no encontrado")
-            continuar()
+                continuar()
+            
         
         if opcion == "4":
             codigo = input("Ingrese el código: ")
