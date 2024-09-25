@@ -60,6 +60,11 @@ def actualizar_precio(codigo, nuevo_precio):
          return True
      return False
 
+def formatear(valor):
+    if isinstance(valor, tuple):
+        return f'{valor[0]}-{valor[1]}-{valor[2]}'
+    return f'{valor}'
+
 
 # Función para mostrar el menú de opciones por pantalla
 def menu_opciones():
@@ -111,7 +116,7 @@ def main():
                 print(f"Producto encontrado:")
                 for i in producto: #va pasando i por i agarrando diccionarios completos
                     for clave,valor in i.items(): #agarra el diccionario de i en esa posicion y la muestra
-                        print(f"{clave.capitalize()}: {valor}")
+                        print(f"{clave.capitalize()}: {formatear(valor)}")
                 continuar()
             else:
                 print("Producto no encontrado")
