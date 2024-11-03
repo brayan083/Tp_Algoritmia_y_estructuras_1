@@ -162,6 +162,8 @@ def main():
     ...
     agregar_producto("002", "Leche", 30, 29.99, 'La serenisima', "02-01-2024")
     agregar_producto("001", "Pan", 50, 15.99, 'Arcor', "01-01-2024")
+    agregar_producto("003", "Yogurt", 43, 35.99, 'Las 3 ninas', "12-02-2024")
+    agregar_producto("004", "Oreo", 25, 12, 'Oreo', "14-07-2024")
     Start = True
     while Start:
 
@@ -259,18 +261,18 @@ main()
 
 # Estructura de datos de ejemplo:
 # [
-#     {
-#         'codigo': '3', 
-#         'nombre': 'pan', 
-#         'cantidad': 12, 
-#         'precio': 20.0,
-#         'proveedor': 'Panaderia UADE'
-#     },
-#     {
-#         'codigo': '2', 
-#         'nombre': 'leche', 
-#         'cantidad': 5, 
-#         'precio': 15.0,
-#         'proveedor': 'UADE cuando es epoca de parcial'
-#     }
+    # {
+    #     'codigo': '3', 
+    #     'nombre': 'pan', 
+    #     'cantidad': 12, 
+    #     'precio': 20.0,
+    #     'proveedor': 'Panaderia UADE'
+    # },
+    # {
+    #     'codigo': '2', 
+    #     'nombre': 'leche', 
+    #     'cantidad': 5, 
+    #     'precio': 15.0,
+    #     'proveedor': 'UADE cuando es epoca de parcial'
+    # }
 # ]
