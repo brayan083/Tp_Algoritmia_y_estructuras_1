@@ -1,0 +1,50 @@
+[
+    {
+        "codigo": "002",
+        "nombre": "Leche",
+        "cantidad": 30,
+        "precio": 29.99,
+        "fecha": [
+            "02",
+            "01",
+            "2024"
+        ],
+        "proveedor": "La serenisima"
+    },
+    {
+        "codigo": "001",
+        "nombre": "Pan",
+        "cantidad": 50,
+        "precio": 15.99,
+        "fecha": [
+            "01",
+            "01",
+            "2024"
+        ],
+        "proveedor": "Arcor"
+    },
+    {
+        "codigo": "003",
+        "nombre": "Pan y queso",
+        "cantidad": 12,
+        "precio": 15.0,
+        "fecha": [
+            "15",
+            "12",
+            "2022"
+        ],
+        "proveedor": "Bray"
+    },
+    {
+        "codigo": "004",
+        "nombre": "Pepe",
+        "cantidad": 12,
+        "precio": 32.0,
+        "fecha": [
+            "12",
+            "12",
+            "1212"
+        ],
+        "proveedor": "Acas"
+    }
+]

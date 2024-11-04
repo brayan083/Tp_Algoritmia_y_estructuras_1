@@ -1,36 +1,57 @@
-# Lista para almacenar los productos
-inventario = []
+import json
+import os
 
-# Set para almacenar los códigos de productos únicos
-codigos_unicos = set()
+# Ruta del archivo JSON
+archivo_inventario = 'inventario_V2.json'
 
-# Set para almacenar los nombres de productos únicos
-productos_unicos = set()
+# Función para cargar el inventario desde el archivo JSON
+def cargar_inventario():
+    try:
+        with open(archivo_inventario, 'r', encoding='UTF-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+
+# Función para guardar el inventario en el archivo JSON
+def guardar_inventario(inventario):
+    with open(archivo_inventario, 'w') as file:
+        json.dump(inventario, file, indent=4)
 
 # Función para ver el inventario
 def ver_inventario():
-    ...
-    print("Inventario:")
-    print("")
-    for producto in inventario:
-        print(f"Código: {producto['codigo']}")
+    inventario = cargar_inventario()
+    print("Inventario actual:")
+    for codigo, producto in inventario["productos"].items():
+        print(f"Código: {codigo}")
         print(f"Nombre: {producto['nombre']}")
-        print(f"Cantidad: {producto['cantidad']}")
-        print(f"Precio: {producto['precio']}")
-        print(f"Fecha: {producto['fecha'][0]}-{producto['fecha'][1]}-{producto['fecha'][2]}")
-        print(f"Proveedor: {producto['proveedor']}")
-        print("---------")
+        print(f"Categoría: {producto['categoria']}")
+        print(f"Cantidad: {producto['cantidad']['valor']} {producto['cantidad']['unidad']}")
+        print(f"Precio: {producto['precio']['valor']} {producto['precio']['moneda']}")
+        print(f"Proveedor ID: {producto['proveedor_id']}")
+        print(f"Fecha de vencimiento: {producto['fecha_vencimiento']}")
+        print(f"Última actualización: {producto['fecha_ultima_actualizacion']}")
+        print("-" * 30)
+
+    print("\nMetadatos del inventario:")
+    print(f"Versión: {inventario['metadata']['version']}")
+    print(f"Última actualización: {inventario['metadata']['ultima_actualizacion']}")
+    print(f"Total de productos: {inventario['metadata']['total_productos']}")
+    print(f"Total de proveedores: {inventario['metadata']['total_proveedores']}")
+    print(f"Valor total del inventario: {inventario['metadata']['valor_total_inventario']} {inventario['productos'][next(iter(inventario['productos']))]['precio']['moneda']}")
+
+    print("\nInformación de proveedores:")
+    for prov_id, proveedor in inventario["proveedores"].items():
+        print(f"ID: {prov_id}")
+        print(f"Nombre: {proveedor['nombre']}")
+        print(f"Dirección: {proveedor['direccion']}")
+        print(f"Teléfono: {proveedor['telefono']}")
+        print(f"Email: {proveedor['email']}")
+        print("-" * 30)
 
 # Función para agregar un producto
 def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
     ...
-    if codigo in codigos_unicos:
-        print("Error: El código del producto ya existe.")
-        return
-    
-    if nombre in productos_unicos:
-        print("Error: El código del producto ya existe.")
-        return
+    inventario = cargar_inventario()
     
     dia, mes, anio = fecha.split("-")
     new_date = (dia, mes, anio)
@@ -44,12 +65,12 @@ def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
         "proveedor": proveedor.capitalize()
     }
     inventario.append(producto)
-    codigos_unicos.add(codigo)
-    productos_unicos.add(nombre)
+    guardar_inventario(inventario)
 
 # Función para buscar un producto
 def buscar_producto(codigo):
     ...
+    inventario = cargar_inventario()
     for producto in inventario:
         if producto["codigo"] == codigo:
             return producto
@@ -57,6 +78,7 @@ def buscar_producto(codigo):
 
 # Función para buscar un producto por nombre o código
 def Buscarpalabras(palabra):
+    inventario = cargar_inventario()
     productosencontrados = [producto for producto in inventario if producto['nombre'] == palabra or producto["codigo"] == palabra]
     if productosencontrados: 
         return productosencontrados
@@ -73,12 +95,14 @@ def actualizar_cantidad(codigo, nueva_cantidad):
 
 #Funcion para borrar un producto
 def borrar_producto(dato): 
+    inventario = cargar_inventario()
     
     producto_eliminar = Buscarpalabras(dato)
     if producto_eliminar == None:
         print("Producto no encontrado")
         continuar()
         return
+    
     confirmar = int(input(f"¿Desea eliminar el producto {producto_eliminar}? 1 para SI, 2 para NO: "))
     if confirmar == 1:
         inventario_nuevo = []
@@ -90,21 +114,25 @@ def borrar_producto(dato):
     
 # Función para contar el número total de productos en el inventario
 def reporte_total_productos():
+    inventario = cargar_inventario()
     total_productos = len(inventario)
     print(f"Total de productos en el inventario: {total_productos}")
 
 # Función para calcular el valor total del inventario
 def reporte_valor_inventario():
+    inventario = cargar_inventario()
     valor_total = sum(producto['precio'] * producto['cantidad'] for producto in inventario)
     print(f"Valor total del inventario: ${valor_total:.2f}")
 
 # Función para contar el número total de unidades de productos
 def reporte_total_unidades():
+    inventario = cargar_inventario()
     total_unidades = sum(producto['cantidad'] for producto in inventario)
     print(f"Total de unidades en el inventario: {total_unidades}")
 
 # Función para mostrar productos por proveedor
 def reporte_productos_por_proveedor(proveedor):
+    inventario = cargar_inventario()
     productos_proveedor = [producto for producto in inventario if producto['proveedor'] == proveedor]
     if productos_proveedor:
         print(f"Productos del proveedor {proveedor}:")
@@ -115,6 +143,7 @@ def reporte_productos_por_proveedor(proveedor):
 
 # Función para mostrar los productos más caros
 def reporte_productos_mas_caros():
+    inventario = cargar_inventario()
     productos_mas_caros = sorted(inventario, key=precio_producto, reverse=True)[:5]
     if productos_mas_caros:
         print(f"Top 5 productos más caros:")
@@ -156,19 +185,17 @@ def menu_reportes():
 # Función para continuar con la ejecución del programa
 def continuar():
     input("Presione enter para continuar...")
+    os.system('cls') #limpia la pantalla
 
 # Función principal del programa
 def main(): 
     ...
-    agregar_producto("002", "Leche", 30, 29.99, 'La serenisima', "02-01-2024")
-    agregar_producto("001", "Pan", 50, 15.99, 'Arcor', "01-01-2024")
-    agregar_producto("003", "Yogurt", 43, 35.99, 'Las 3 ninas', "12-02-2024")
-    agregar_producto("004", "Oreo", 25, 12, 'Oreo', "14-07-2024")
     Start = True
     while Start:
 
         menu_opciones()
         opcion = input("Ingrese una opción: ")
+        os.system('cls') #limpia la pantalla
         print("")
                         
         if opcion == "1":
@@ -214,6 +241,7 @@ def main():
             while bandera:
                 menu_reportes()
                 opcion_reporte = input("Ingrese una opción de reporte: ")
+                os.system('cls') #limpia la pantalla
                 print("")
                 
                 if opcion_reporte == "1":
@@ -258,21 +286,3 @@ def main():
             print("Opción inválida")
             
 main()
-
-# Estructura de datos de ejemplo:
-# [
-    # {
-    #     'codigo': '3', 
-    #     'nombre': 'pan', 
-    #     'cantidad': 12, 
-    #     'precio': 20.0,
-    #     'proveedor': 'Panaderia UADE'
-    # },
-    # {
-    #     'codigo': '2', 
-    #     'nombre': 'leche', 
-    #     'cantidad': 5, 
-    #     'precio': 15.0,
-    #     'proveedor': 'UADE cuando es epoca de parcial'
-    # }
-# ]
