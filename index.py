@@ -14,11 +14,14 @@ def cargar_inventario():
 
 # Función para guardar el inventario en el archivo JSON
 def guardar_inventario(inventario):
-    with open(archivo_inventario, 'w') as file:
-        json.dump(inventario, file, indent=4)
+    try:
+        with open(archivo_inventario, 'w', encoding='UTF-8') as file:
+            json.dump(inventario, file, indent=4)
+    except IOError as e:
+        print(f"Error al guardar el inventario: {e}")
 
 # Función para ver el inventario
-def ver_inventario():
+def ver_inventario(cargar_inventario):
     inventario = cargar_inventario()
     print("Inventario actual:")
     for codigo, producto in inventario["productos"].items():
@@ -106,8 +109,7 @@ def buscar_producto(codigo):
 # Función para buscar un producto por nombre o código
 def Buscarpalabras(palabra):
     inventario = cargar_inventario()
-    print(inventario)
-    productosencontrados = [producto for producto in inventario if producto['nombre'] == palabra or producto["codigo"] == palabra]
+    productosencontrados = [(codigo, producto) for codigo, producto in inventario['productos'].items() if codigo == palabra or producto['nombre'] == palabra]
     if productosencontrados: 
         return productosencontrados
     return None
@@ -251,7 +253,7 @@ def main():
         print("")
                         
         if opcion == "1":
-            ver_inventario()
+            ver_inventario(cargar_inventario)
             continuar()
         
         if opcion == "2":
@@ -267,12 +269,15 @@ def main():
         if opcion == "3": #Buscar producto
             codigo = input("Ingrese el código o el nombre: ")
             producto = Buscarpalabras(codigo) #me devuelve una lista con los productosencontrados
-            # print(producto) #imprime lista
             if producto: 
                 print(f"Producto encontrado:")
-                for i in producto: #va pasando i por i agarrando diccionarios completos
-                    for clave,valor in i.items(): #agarra el diccionario de i en esa posicion y la muestra
-                        print(f"{clave.capitalize()}: {(lambda x : f'{x[0]}-{x[1]}-{x[2]}' if isinstance(valor, tuple) else x)(valor)}") #lambda bastante al pedo xd
+                #print(producto)
+                for clave, valor in producto: #va pasando i por i agarrando diccionarios completos
+                    #for clave,valor in i: #agarra el diccionario de i en esa posicion y la muestra
+                        print(f"{clave.capitalize()}:")
+                        for subclave, subvalor in valor.items():
+                            print(f"  {subclave.capitalize()}: {subvalor}")  # Agregar sangría para mejor legibilidad
+                        print()  # Salto de línea después de cada grupo de subclaves
                 continuar()
             else:
                 print("Producto no encontrado")
