@@ -48,13 +48,40 @@ def ver_inventario():
         print(f"Email: {proveedor['email']}")
         print("-" * 30)
 
+def es_bisiesto(anio):
+    return (anio % 4 == 0 and anio % 100 != 0) or (anio % 400 == 0)
+
+def es_fecha_valida(fecha):
+    dia, mes, anio = procesar_fecha(fecha)
+    dia = int(dia)
+    mes = int(mes)
+    anio = int(anio)
+
+    dias_por_mes = [31, 29 if es_bisiesto(anio) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    if not (1 <= mes <= 12):
+        return False
+
+    if not (1 <= dia <= dias_por_mes[mes - 1]):
+        return False
+
+    return True
+
+def procesar_fecha(fecha):
+    if fecha.find('-') != -1:
+        dia, mes, anio = fecha.split("-")
+    elif fecha.find('/') != -1:
+        dia, mes, anio = fecha.split("/")
+    elif fecha.find(' ') != -1:
+        dia, mes, anio = fecha.split(" ")
+
+    return (dia, mes, anio)
+
 # Función para agregar un producto
 def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
     ...
     inventario = cargar_inventario()
-    
-    dia, mes, anio = fecha.split("-")
-    new_date = (dia, mes, anio)
+    new_date = procesar_fecha(fecha)
     
     producto = {
         "codigo": codigo,
@@ -155,6 +182,30 @@ def reporte_productos_mas_caros():
 def precio_producto(producto):
     return producto['precio']
 
+def formatear(valor):
+    if isinstance(valor, tuple): #isinstance compara el tipo de "valor" con el tipo tupla
+        return f'{valor[0]}-{valor[1]}-{valor[2]}'#si coincide entra y la formatea a un valor de tipo fecha
+    return f'{valor}'
+
+def validar_producto():
+    while(True):
+        codigo = input("Ingrese el código: ")
+        if Buscarpalabras(codigo) == None:
+            break
+        print('\nEl codigo ya existe!\n')
+    while(True):
+        nombre = input("Ingrese el nombre: ")
+        if Buscarpalabras(nombre) == None:
+            break
+        print('\nEl nombre ya existe!\n')
+    return codigo, nombre
+
+def validar_fecha():
+    while(True):
+        fecha = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
+        if es_fecha_valida(fecha):
+            return fecha
+        print('\nLa fecha es invalida!\n')
 
 # Función para mostrar el menú de opciones por pantalla
 def menu_opciones():
@@ -203,25 +254,24 @@ def main():
             continuar()
         
         if opcion == "2":
-            codigo = input("Ingrese el código: ")
-            nombre = input("Ingrese el nombre: ")
+            codigo, nombre = validar_producto()
             cantidad = int(input("Ingrese la cantidad: "))
             precio = float(input("Ingrese el precio: "))
             fecha = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
             proveedor = input("Ingrese el nombre del Proveedor: ")
+            fecha = validar_fecha()
             agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha)
             continuar()
         
         if opcion == "3": #Buscar producto
             codigo = input("Ingrese el código o el nombre: ")
             producto = Buscarpalabras(codigo) #me devuelve una lista con los productosencontrados
-            #
             # print(producto) #imprime lista
             if producto: 
                 print(f"Producto encontrado:")
                 for i in producto: #va pasando i por i agarrando diccionarios completos
                     for clave,valor in i.items(): #agarra el diccionario de i en esa posicion y la muestra
-                        print(f"{clave.capitalize()}: {valor}")
+                        print(f"{clave.capitalize()}: {(lambda x : f'{x[0]}-{x[1]}-{x[2]}' if isinstance(valor, tuple) else x)(valor)}") #lambda bastante al pedo xd
                 continuar()
             else:
                 print("Producto no encontrado")
@@ -270,6 +320,11 @@ def main():
                 
                 if int(opcion_reporte) not in range(1, 5) and opcion_reporte != "-1":
                     print("Opción inválida")
+            
+            continuar()
+            
+        
+
 
         
         #Opcion de borrado por codigo
