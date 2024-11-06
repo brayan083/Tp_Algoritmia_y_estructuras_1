@@ -106,6 +106,7 @@ def buscar_producto(codigo):
 # Función para buscar un producto por nombre o código
 def Buscarpalabras(palabra):
     inventario = cargar_inventario()
+    print(inventario)
     productosencontrados = [producto for producto in inventario if producto['nombre'] == palabra or producto["codigo"] == palabra]
     if productosencontrados: 
         return productosencontrados
