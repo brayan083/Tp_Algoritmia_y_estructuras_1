@@ -2,7 +2,7 @@
     "productos": {
         "001": {
             "nombre": "Pan",
-            "categoria": "Panadería",
+            "categoria": "Panader\u00eda",
             "cantidad": {
                 "valor": 12,
                 "unidad": "unidades"
@@ -17,7 +17,7 @@
         },
         "002": {
             "nombre": "Leche",
-            "categoria": "Lácteos",
+            "categoria": "L\u00e1cteos",
             "cantidad": {
                 "valor": 5,
                 "unidad": "litros"
@@ -29,17 +29,122 @@
             "proveedor_id": "PROV002",
             "fecha_vencimiento": "2024-11-30",
             "fecha_ultima_actualizacion": "2024-11-03"
+        },
+        "1003": {
+            "nombre": "Trigo",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 202,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 130.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "sancor",
+            "fecha_vencimiento": "24-11-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1004": {
+            "nombre": "Arroz",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 15,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 2200.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "molinos",
+            "fecha_vencimiento": "28-11-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1005": {
+            "nombre": "Dulce de leche",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 344,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 25000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "La serenisima",
+            "fecha_vencimiento": "30-12-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1006": {
+            "nombre": "Galletitas de trigo",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 250,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 24.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Granix",
+            "fecha_vencimiento": "11-10-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1007": {
+            "nombre": "Fideos",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 780,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 153000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Lucchetti",
+            "fecha_vencimiento": "08-02-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1008": {
+            "nombre": "Yogur",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 18,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1390.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "La serenisima",
+            "fecha_vencimiento": "10-08-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1009": {
+            "nombre": "Galletas de arroz",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 20,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1200.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Cerealitas",
+            "fecha_vencimiento": "24-12-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
     "proveedores": {
         "PROV001": {
-            "nombre": "Panadería UADE",
+            "nombre": "Panader\u00eda UADE",
             "direccion": "Av. Independencia 1234",
             "telefono": "+54 11 1234-5678",
             "email": "contacto@panaderiauade.com"
         },
         "PROV002": {
-            "nombre": "UADE Lácteos",
+            "nombre": "UADE L\u00e1cteos",
             "direccion": "Calle Rivadavia 5678",
             "telefono": "+54 11 8765-4321",
             "email": "info@uadelacteos.com"
@@ -48,7 +153,7 @@
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 2,
+        "total_productos": 9,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }

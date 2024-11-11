@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from tabulate import tabulate
 
 # Ruta del archivo JSON
 archivo_inventario = 'inventario_V2.json'
@@ -150,37 +151,93 @@ def formatear(valor):
         return f'{valor[0]}-{valor[1]}-{valor[2]}'#si coincide entra y la formatea a un valor de tipo fecha
     return f'{valor}'
 
-# Función para buscar un producto
-def buscar_producto(codigo):
-    ...
+# Funcion para buscar un producto
+def buscar_producto(id_producto):
     inventario = cargar_inventario()
-    for producto in inventario:
-        if producto["codigo"] == codigo:
-            return producto
-    return None
+    productos = inventario['productos']
+    #divide la busqueda en palabras clave
+    palabras_clave = id_producto.lower().split()
+
+    #busca productos que tengan alguna de las palabras clave en su nombre o codigo
+    encontrados = {}
+    for codigo, producto in productos.items():
+        nombre_producto = producto['nombre'].lower()
+        
+        #verifica si alguna palabra clave esta en el codigo o nombre
+        if any(palabra in nombre_producto for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
+            encontrados[codigo] = producto
+
+    #muestra ugerencias de busqueda si no se encuentra un resultado
+    if not encontrados:
+        print("No se encontró ningún producto exacto. Mostrando sugerencias similares:")
+        sugerencias = {}
+        #sugerencias basadas en las palabras clave
+        for codigo, producto in productos.items():
+            nombre_producto = producto['nombre'].lower()
+            if any(palabra in nombre_producto for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
+                sugerencias[codigo] = producto
+        if sugerencias:
+            mostrar_tabla(sugerencias)
+        else:
+            print("No hay productos que coincidan con la búsqueda.")
+    else:
+        print("Resultados de la búsqueda:")
+        mostrar_tabla(encontrados)
+
+# Funcion que muestra los productos en una tabla usando la lib tabulate y agrega paginacion
+def mostrar_tabla(productos, page_size=5):
+    headers = ["Código", "Nombre", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
+    datos = [[codigo, producto["nombre"], producto["cantidad"]["valor"],
+              producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
+             for codigo, producto in productos.items()]
+    
+    #paginacion
+    total_paginas = (len(datos) + page_size - 1) // page_size  #calcula numero de páginas
+    for page in range(total_paginas):
+        inicio = page * page_size
+        fin = inicio + page_size
+        print(tabulate(datos[inicio:fin], headers=headers, tablefmt="grid"))
+        
+        if page < total_paginas - 1:
+            continuar_pagina = input("Mostrar siguiente página? (s/n): ")
+            if continuar_pagina.lower() != "s":
+                break  
+    mostrar_resumen(productos)
+
+# Funcion que muestra un resumen de los productos encontrados
+def mostrar_resumen(productos):
+    total_productos = len(productos)
+    valor_total = sum(producto["precio"]["valor"] * producto["cantidad"]["valor"] for producto in productos.values())
+    print("\nResumen:")
+    print(f"Total de productos encontrados: {total_productos}")
+    print(f"Valor total de los productos: ARS {valor_total:.2f}")
 
 # Función para buscar un producto por nombre o código
 def Buscarpalabras(palabra):
     inventario = cargar_inventario()
-    productosencontrados = [(codigo, producto) for codigo, producto in inventario['productos'].items() if codigo == palabra or producto['nombre'] == palabra]
+    productosencontrados = [(codigo, producto) for codigo, producto in inventario['productos'].items() 
+                            if codigo == palabra or producto['nombre'] == palabra]
     if productosencontrados: 
         return productosencontrados
     return None
 
 # Función para actualizar la cantidad de un producto
 def actualizar_cantidad(codigo, nueva_cantidad):
-    ...
-    producto = buscar_producto(codigo)
-    if producto:
-        producto["cantidad"] = nueva_cantidad
-        return True
-    return False
+    inventario = cargar_inventario()
+    productos = inventario['productos']
+
+    if codigo in productos:
+        productos[codigo]["cantidad"]["valor"] = nueva_cantidad
+        nombre_producto = productos[codigo]["nombre"]  #guarda el nombre del producto
+        guardar_inventario(inventario)
+        return nombre_producto
+    return None
 
 #Funcion para borrar un producto
 def borrar_producto(dato): 
     inventario = cargar_inventario()
-    
     producto_eliminar = Buscarpalabras(dato)
+
     if producto_eliminar == None:
         print("Producto no encontrado")
         continuar()
@@ -291,7 +348,7 @@ def main():
 
         menu_opciones()
         opcion = input("Ingrese una opción: ")
-        os.system('cls') #limpia la pantalla
+        os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
         print("")
                         
         if opcion == "1":
@@ -308,27 +365,17 @@ def main():
             continuar()
         
         if opcion == "3": #Buscar producto
-            codigo = input("Ingrese el código o el nombre: ")
-            producto = Buscarpalabras(codigo) #me devuelve una lista con los productosencontrados
-            if producto: 
-                print(f"Producto encontrado:")
-                #print(producto)
-                for clave, valor in producto: #va pasando i por i agarrando diccionarios completos
-                    #for clave,valor in i: #agarra el diccionario de i en esa posicion y la muestra
-                        print(f"{clave.capitalize()}:")
-                        for subclave, subvalor in valor.items():
-                            print(f"  {subclave.capitalize()}: {subvalor}")  # Agregar sangría para mejor legibilidad
-                        print()  # Salto de línea después de cada grupo de subclaves
-                continuar()
-            else:
-                print("Producto no encontrado")
-                continuar()
+            id_producto = input("Ingrese el código o el nombre: ")
+            buscar_producto(id_producto)
+            continuar()
             
         if opcion == "4":
             codigo = input("Ingrese el código: ")
             nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
-            if actualizar_cantidad(codigo, nueva_cantidad):
-                print("Cantidad actualizada")
+            nombre_producto = actualizar_cantidad(codigo, nueva_cantidad)
+
+            if nombre_producto:
+                print(f"Cantidad del producto '{nombre_producto}' actualizada a {nueva_cantidad} unidades.")
             else:
                 print("Producto no encontrado")
             continuar()   
@@ -338,7 +385,7 @@ def main():
             while bandera:
                 menu_reportes()
                 opcion_reporte = input("Ingrese una opción de reporte: ")
-                os.system('cls') #limpia la pantalla
+                os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
                 print("")
                 
                 if opcion_reporte == "1":
