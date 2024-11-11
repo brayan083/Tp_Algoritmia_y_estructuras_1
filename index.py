@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 # Ruta del archivo JSON
 archivo_inventario = 'inventario_V2.json'
@@ -10,9 +11,9 @@ def cargar_inventario():
         with open(archivo_inventario, 'r', encoding='UTF-8') as file:
             return json.load(file)
     except FileNotFoundError:
-        return []
+        return {"productos": {}, "metadata": {}, "proveedores": {}} #"productos": {}, "proveedores": {}, "metadata": {"total_productos": 0}
 
-# Función para guardar el inventario en el archivo JSON
+#Función para guardar el inventario en el archivo JSON
 def guardar_inventario(inventario):
     try:
         with open(archivo_inventario, 'w', encoding='UTF-8') as file:
@@ -20,7 +21,37 @@ def guardar_inventario(inventario):
     except IOError as e:
         print(f"Error al guardar el inventario: {e}")
 
-# Función para ver el inventario
+#crea un codigo unico para cada producto
+def generar_codigo_unico(inventario):
+    codigo_base = 1000
+    total_productos = inventario['metadata'].get("total_productos", 0)
+    return str(codigo_base + total_productos + 1)
+
+# Función para validar campos del producto
+def validar_campos(cantidad, precio, fecha):
+    try:
+        cantidad = int(cantidad)
+        if cantidad < 0:
+            raise ValueError("La cantidad debe ser un número positivo")
+    except ValueError as e:
+        print(f"Error: {e}")
+        return False
+
+    try:
+        precio = float(precio)
+        if precio < 0:
+            raise ValueError("El precio debe ser un valor positivo")
+    except ValueError as e:
+        print(f"Error: {e}")
+        return False
+
+    if not es_fecha_valida(fecha):
+        print("Error: La fecha de vencimiento es inválida")
+        return False
+
+    return True
+
+#Función para ver el inventario
 def ver_inventario(cargar_inventario):
     inventario = cargar_inventario()
     print("Inventario actual:")
@@ -51,6 +82,40 @@ def ver_inventario(cargar_inventario):
         print(f"Email: {proveedor['email']}")
         print("-" * 30)
 
+def agregar_producto(nombre, cantidad, precio, proveedor, fecha):
+    inventario = cargar_inventario()
+    
+    #crea un codigo unico para cada prod
+    codigo = generar_codigo_unico(inventario)
+    
+    #validar precio y cantidad
+    if not validar_campos(cantidad, precio, fecha):
+        return
+    
+    if not es_fecha_valida(fecha):
+        print("La fecha de vencimiento no es válida.")
+        return
+    
+    #formatea la fecha de vencimiento
+    fecha = formatear(procesar_fecha(fecha))
+    
+    producto = {
+        "nombre": nombre.capitalize(),
+        "categoria": "General",  # Puedes cambiar esta categoría predeterminada si es necesario
+        "cantidad": {"valor": cantidad, "unidad": "unidad"},  # Asumimos "unidad" como predeterminada
+        "precio": {"valor": precio, "moneda": "ARS"},  # Asumimos USD como moneda predeterminada
+        "proveedor_id": proveedor,
+        "fecha_vencimiento": fecha,
+        "fecha_ultima_actualizacion": formatear(procesar_fecha("01-01-2024"))  # Asignar fecha de actualización
+    }
+    
+    inventario["productos"][codigo] = producto
+    
+    inventario["metadata"]["total_productos"] = len(inventario["productos"])
+    
+    guardar_inventario(inventario)
+    print(f"Producto '{nombre}' agregado exitosamente con el código {codigo}.")
+
 def es_bisiesto(anio):
     return (anio % 4 == 0 and anio % 100 != 0) or (anio % 400 == 0)
 
@@ -80,22 +145,10 @@ def procesar_fecha(fecha):
 
     return (dia, mes, anio)
 
-# Función para agregar un producto
-def agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha):
-    ...
-    inventario = cargar_inventario()
-    new_date = procesar_fecha(fecha)
-    
-    producto = {
-        "codigo": codigo,
-        "nombre": nombre.capitalize(),
-        "cantidad": cantidad,
-        "precio": precio,
-        "fecha": new_date,
-        "proveedor": proveedor.capitalize()
-    }
-    inventario.append(producto)
-    guardar_inventario(inventario)
+def formatear(valor):
+    if isinstance(valor, tuple): #isinstance compara el tipo de "valor" con el tipo tupla
+        return f'{valor[0]}-{valor[1]}-{valor[2]}'#si coincide entra y la formatea a un valor de tipo fecha
+    return f'{valor}'
 
 # Función para buscar un producto
 def buscar_producto(codigo):
@@ -185,23 +238,12 @@ def reporte_productos_mas_caros():
 def precio_producto(producto):
     return producto['precio']
 
-def formatear(valor):
-    if isinstance(valor, tuple): #isinstance compara el tipo de "valor" con el tipo tupla
-        return f'{valor[0]}-{valor[1]}-{valor[2]}'#si coincide entra y la formatea a un valor de tipo fecha
-    return f'{valor}'
-
 def validar_producto():
     while(True):
-        codigo = input("Ingrese el código: ")
-        if Buscarpalabras(codigo) == None:
-            break
-        print('\nEl codigo ya existe!\n')
-    while(True):
         nombre = input("Ingrese el nombre: ")
-        if Buscarpalabras(nombre) == None:
-            break
+        if Buscarpalabras(nombre) is None:
+            return nombre
         print('\nEl nombre ya existe!\n')
-    return codigo, nombre
 
 def validar_fecha():
     while(True):
@@ -239,7 +281,7 @@ def menu_reportes():
 # Función para continuar con la ejecución del programa
 def continuar():
     input("Presione enter para continuar...")
-    os.system('cls') #limpia la pantalla
+    os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla para windows y mac
 
 # Función principal del programa
 def main(): 
@@ -257,13 +299,12 @@ def main():
             continuar()
         
         if opcion == "2":
-            codigo, nombre = validar_producto()
+            nombre = validar_producto()
             cantidad = int(input("Ingrese la cantidad: "))
             precio = float(input("Ingrese el precio: "))
-            fecha = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
+            fecha = validar_fecha() #se valida la fecha de vencimiento
             proveedor = input("Ingrese el nombre del Proveedor: ")
-            fecha = validar_fecha()
-            agregar_producto(codigo, nombre, cantidad, precio, proveedor, fecha)
+            agregar_producto(nombre, cantidad, precio, proveedor, fecha) #Codigo no se envia
             continuar()
         
         if opcion == "3": #Buscar producto
@@ -328,11 +369,7 @@ def main():
                     print("Opción inválida")
             
             continuar()
-            
-        
-
-
-        
+                 
         #Opcion de borrado por codigo
         if opcion == "6":
             metodo = input("Ingrese el código o nombre del producto a eliminar: ")
