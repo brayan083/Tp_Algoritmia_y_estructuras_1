@@ -11,7 +11,7 @@ def cargar_inventario():
         with open(archivo_inventario, 'r', encoding='UTF-8') as file:
             return json.load(file)
     except FileNotFoundError:
-        return {"productos": {}, "metadata": {}, "proveedores": {}} #"productos": {}, "proveedores": {}, "metadata": {"total_productos": 0}
+        return {"productos": {}, "metadata": {}, "proveedores": {}}
 
 #Función para guardar el inventario en el archivo JSON
 def guardar_inventario(inventario):
@@ -101,12 +101,12 @@ def agregar_producto(nombre, cantidad, precio, proveedor, fecha):
     
     producto = {
         "nombre": nombre.capitalize(),
-        "categoria": "General",  # Puedes cambiar esta categoría predeterminada si es necesario
-        "cantidad": {"valor": cantidad, "unidad": "unidad"},  # Asumimos "unidad" como predeterminada
-        "precio": {"valor": precio, "moneda": "ARS"},  # Asumimos USD como moneda predeterminada
+        "categoria": "General",  #se puede cambiar esta categoria predeterminada
+        "cantidad": {"valor": cantidad, "unidad": "unidad"},
+        "precio": {"valor": precio, "moneda": "ARS"},
         "proveedor_id": proveedor,
         "fecha_vencimiento": fecha,
-        "fecha_ultima_actualizacion": formatear(procesar_fecha("01-01-2024"))  # Asignar fecha de actualización
+        "fecha_ultima_actualizacion": formatear(procesar_fecha("01-01-2024"))
     }
     
     inventario["productos"][codigo] = producto
