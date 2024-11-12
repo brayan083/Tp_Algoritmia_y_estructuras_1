@@ -152,99 +152,19 @@
             "fecha_ultima_actualizacion": "01-01-2024"
         },
         "1012": {
-            "nombre": "Azucar",
+            "nombre": "Fabi",
             "categoria": "General",
             "cantidad": {
-                "valor": 30,
+                "valor": 1000,
                 "unidad": "unidad"
             },
             "precio": {
-                "valor": 650.0,
+                "valor": 1.0,
                 "moneda": "ARS"
             },
-            "proveedor_id": "PROV003",
-            "proveedor_nombre": "Ledesma",
-            "fecha_vencimiento": "31-12-2025",
-            "fecha_ultima_actualizacion": "01-01-2024"
-        },
-        "1013": {
-            "nombre": "Azucar mascabo",
-            "categoria": "General",
-            "cantidad": {
-                "valor": 4,
-                "unidad": "unidad"
-            },
-            "precio": {
-                "valor": 2500.0,
-                "moneda": "ARS"
-            },
-            "proveedor_id": "PROV003",
-            "proveedor_nombre": "Ledesma",
-            "fecha_vencimiento": "08-04-2026",
-            "fecha_ultima_actualizacion": "01-01-2024"
-        },
-        "1014": {
-            "nombre": "Yerba",
-            "categoria": "General",
-            "cantidad": {
-                "valor": 800,
-                "unidad": "unidad"
-            },
-            "precio": {
-                "valor": 3850.0,
-                "moneda": "ARS"
-            },
-            "proveedor_id": "PROV004",
-            "proveedor_nombre": "Playadito",
-            "fecha_vencimiento": "03-10-2026",
-            "fecha_ultima_actualizacion": "01-01-2024"
-        },
-        "1015": {
-            "nombre": "Chocolinas",
-            "categoria": "General",
-            "cantidad": {
-                "valor": 255,
-                "unidad": "unidad"
-            },
-            "precio": {
-                "valor": 1255.0,
-                "moneda": "ARS"
-            },
-            "proveedor_id": "PROV005",
-            "proveedor_nombre": "Arcor",
-            "fecha_vencimiento": "03-04-2025",
-            "fecha_ultima_actualizacion": "01-01-2024"
-        },
-        "1016": {
-            "nombre": "Pure de tomate",
-            "categoria": "General",
-            "cantidad": {
-                "valor": 980,
-                "unidad": "unidad"
-            },
-            "precio": {
-                "valor": 650.0,
-                "moneda": "ARS"
-            },
-            "proveedor_id": "PROV005",
-            "proveedor_nombre": "Arcor",
-            "fecha_vencimiento": "24-07-2027",
-            "fecha_ultima_actualizacion": "01-01-2024"
-        },
-        "1017": {
-            "nombre": "Zucaritas",
-            "categoria": "General",
-            "cantidad": {
-                "valor": 2000,
-                "unidad": "unidad"
-            },
-            "precio": {
-                "valor": 45.0,
-                "moneda": "ARS"
-            },
-            "proveedor_id": "PROV006",
-            "proveedor_nombre": "Fabi Corps",
-            "fecha_vencimiento": "12-02-2026",
+            "proveedor_id": "PROV007",
+            "proveedor_nombre": "Luana Industrys",
+            "fecha_vencimiento": "11-11-2025",
             "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
@@ -284,12 +204,18 @@
             "direccion": "Independencia",
             "telefono": "1234-5678",
             "email": "fabiancorpsoficial@gmail.com"
+        },
+        "PROV007": {
+            "nombre": "Luana Industrys",
+            "direccion": "Constituci\u00f3n",
+            "telefono": "+54 11 1234-7878",
+            "email": "LuanaIndustrys@gmail.com"
         }
     },
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 16,
+        "total_productos": 11,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }

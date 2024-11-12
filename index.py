@@ -287,26 +287,28 @@ def actualizar_cantidad(codigo, nueva_cantidad):
     return None
 
 #Funcion para borrar un producto
-def borrar_producto(proveedor_id, producto_codigo):
+def borrar_producto(producto_codigo):
+    comprobar = True
+    while comprobar:
+        try:
+            validar_borrado = input("¿Esta seguro de querer borrar este producto? \n 1) si \n 2) no \n Escriba su opcion aqui: ")
+            validar_borrado = validar_borrado.lower()
+            if validar_borrado == 'si':
+                comprobar = False
+            else:
+                if validar_borrado == 'no':
+                    return
+        except ValueError as e:
+            print(f"Respuesta erronea: {e}")
     try:
         inventario = cargar_inventario()
-        proveedores = inventario.get("proveedores", {}) # Verifica que el proveedor existe
-        if proveedor_id not in proveedores:
-            print(f"ID de proveedor: {proveedor_id} no encontrado.")
-            return
-
         productos = inventario.get("productos", {}) # Verificar si el producto existe en los productos
         if producto_codigo in productos:
             producto = productos[producto_codigo]
-            if producto["proveedor_id"] == proveedor_id:
-                del productos[producto_codigo]
-                print(f"Producto: {producto['nombre']} borrado exitosamente.")
-                
-                inventario["metadata"]["total_productos"] = len(inventario["productos"])
-                
-                guardar_inventario(inventario)
-            else:
-                print("El producto no pertenece al proveedor especificado.")
+            del productos[producto_codigo]
+            print(f"Producto: {producto['nombre']} borrado exitosamente.")
+            inventario["metadata"]["total_productos"] = len(inventario["productos"])
+            guardar_inventario(inventario)
         else:
             print("Producto no encontrado en el inventario.")
         
@@ -490,11 +492,8 @@ def main():
                  
             #Opcion de borrado por codigo
             if opcion == "6":
-                print("Para realizar el borrado de un producto se requier el ingreso de los siguientes datos:")
-                id_proveedor = input("ID del proveedor: ")
-
-                producto_codigo = input("Codigo del producto: ")
-                borrar_producto(id_proveedor, producto_codigo)
+                producto_codigo = input("Ingrese el codigo del producto: ")
+                borrar_producto(producto_codigo)
            
             # Op 
             if opcion == "-1":
