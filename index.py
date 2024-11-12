@@ -287,23 +287,34 @@ def actualizar_cantidad(codigo, nueva_cantidad):
     return None
 
 #Funcion para borrar un producto
-def borrar_producto(dato): 
-    inventario = cargar_inventario()
-    producto_eliminar = Buscarpalabras(dato)
+def borrar_producto(proveedor_id, producto_codigo):
+    try:
+        inventario = cargar_inventario()
+        proveedores = inventario.get("proveedores", {}) # Verifica que el proveedor existe
+        if proveedor_id not in proveedores:
+            print(f"ID de proveedor: {proveedor_id} no encontrado.")
+            return
 
-    if producto_eliminar == None:
-        print("Producto no encontrado")
-        continuar()
-        return
-    
-    confirmar = int(input(f"¿Desea eliminar el producto {producto_eliminar}? 1 para SI, 2 para NO: "))
-    if confirmar == 1:
-        inventario_nuevo = []
-        for producto in inventario:
-            if producto["codigo"] != dato and producto["nombre"] != dato:
-                inventario_nuevo.append(producto)
-        inventario[:] = inventario_nuevo
-        continuar()
+        productos = inventario.get("productos", {}) # Verificar si el producto existe en los productos
+        if producto_codigo in productos:
+            producto = productos[producto_codigo]
+            if producto["proveedor_id"] == proveedor_id:
+                del productos[producto_codigo]
+                print(f"Producto: {producto['nombre']} borrado exitosamente.")
+                
+                inventario["metadata"]["total_productos"] = len(inventario["productos"])
+                
+                guardar_inventario(inventario)
+            else:
+                print("El producto no pertenece al proveedor especificado.")
+        else:
+            print("Producto no encontrado en el inventario.")
+        
+    except KeyError as e:
+        print(f"Error al procesar el inventario: {e}")
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+    continuar()
     
 # Función para contar el número total de productos en el inventario
 def reporte_total_productos():
@@ -411,83 +422,88 @@ def main():
         opcion = input("Ingrese una opción: ")
         os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
         print("")
-                        
-        if opcion == "1":
-            ver_inventario(cargar_inventario)
-            continuar()
-        
-        if opcion == "2":
-            nombre = validar_producto()
-            cantidad = int(input("Ingrese la cantidad: "))
-            precio = float(input("Ingrese el precio: "))
-            fecha = validar_fecha() #se valida la fecha de vencimiento
-            agregar_producto(nombre, cantidad, precio, fecha)
-            continuar()
-        
-        if opcion == "3": #Buscar producto
-            id_producto = input("Ingrese el código o el nombre: ")
-            buscar_producto(id_producto)
-            continuar()
-            
-        if opcion == "4":
-            codigo = input("Ingrese el código: ")
-            nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
-            nombre_producto = actualizar_cantidad(codigo, nueva_cantidad)
 
-            if nombre_producto:
-                print(f"Cantidad del producto '{nombre_producto}' actualizada a {nueva_cantidad} unidades.")
-            else:
-                print("Producto no encontrado")
-            continuar()   
+        try:                
+            if opcion == "1":
+                ver_inventario(cargar_inventario)
+                continuar()
+        
+            if opcion == "2":
+                nombre = validar_producto()
+                cantidad = int(input("Ingrese la cantidad: "))
+                precio = float(input("Ingrese el precio: "))
+                fecha = validar_fecha() #se valida la fecha de vencimiento
+                agregar_producto(nombre, cantidad, precio, fecha)
+                continuar()
+        
+            if opcion == "3": #Buscar producto
+                id_producto = input("Ingrese el código o el nombre: ")
+                buscar_producto(id_producto)
+                continuar()
             
-        if opcion == "5":
-            bandera = True
-            while bandera:
-                menu_reportes()
-                opcion_reporte = input("Ingrese una opción de reporte: ")
-                os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
-                print("")
-                
-                if opcion_reporte == "1":
-                    reporte_total_productos()
-                    continuar()
-                
-                elif opcion_reporte == "2":
-                    reporte_valor_inventario()
-                    continuar()
-                
-                elif opcion_reporte == "3":
-                    reporte_total_unidades()
-                    continuar()
-                
-                elif opcion_reporte == "4":
-                    proveedor = input("Ingrese el nombre del proveedor: ")
-                    reporte_productos_por_proveedor(proveedor)
-                    continuar()
-                    
-                elif opcion_reporte == "5":
-                    reporte_productos_mas_caros()
-                    continuar()
-                
-                elif opcion_reporte == "-1":
-                    bandera = False
-                
+            if opcion == "4":
+                codigo = input("Ingrese el código: ")
+                nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
+                nombre_producto = actualizar_cantidad(codigo, nueva_cantidad)
+
+                if nombre_producto:
+                    print(f"Cantidad del producto '{nombre_producto}' actualizada a {nueva_cantidad} unidades.")
                 else:
-                    print("Opción inválida")
-
-            continuar()
+                    print("Producto no encontrado")
+                continuar()   
+            
+            if opcion == "5":
+                bandera = True
+                while bandera:
+                    menu_reportes()
+                    opcion_reporte = input("Ingrese una opción de reporte: ")
+                    os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
+                    print("")
+                
+                    if opcion_reporte == "1":
+                        reporte_total_productos()
+                        continuar()
+                
+                    elif opcion_reporte == "2":
+                        reporte_valor_inventario()
+                        continuar()
+                
+                    elif opcion_reporte == "3":
+                        reporte_total_unidades()
+                        continuar()
+                
+                    elif opcion_reporte == "4":
+                        proveedor = input("Ingrese el nombre del proveedor: ")
+                        reporte_productos_por_proveedor(proveedor)
+                        continuar()
+                    
+                    elif opcion_reporte == "5":
+                        reporte_productos_mas_caros()
+                        continuar()
+                
+                    elif opcion_reporte == "-1":
+                        bandera = False
+                
+                    else:
+                        print("Opción inválida")
+                continuar()
                  
-        #Opcion de borrado por codigo
-        if opcion == "6":
-            metodo = input("Ingrese el código o nombre del producto a eliminar: ")
-            borrar_producto(metodo)
+            #Opcion de borrado por codigo
+            if opcion == "6":
+                print("Para realizar el borrado de un producto se requier el ingreso de los siguientes datos:")
+                id_proveedor = input("ID del proveedor: ")
+
+                producto_codigo = input("Codigo del producto: ")
+                borrar_producto(id_proveedor, producto_codigo)
            
-        # Op 
-        if opcion == "-1":
-            Start = False
-            print("Saliendo del programa... ¡Hasta luego!")
+            # Op 
+            if opcion == "-1":
+                Start = False
+                print("Saliendo del programa... ¡Hasta luego!")
         
-        if int(opcion) not in range(1, 5) and opcion != "-1":
-            print("Opción inválida")
+            if int(opcion) not in range(1, 5) and opcion != "-1":
+                print("Opción inválida")
+        except ValueError:
+            print("Los datos ingresados son erroneos")
             
 main()
