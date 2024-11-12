@@ -149,6 +149,102 @@
             "proveedor_id": "Granix",
             "fecha_vencimiento": "23-09-2026",
             "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1011": {
+            "nombre": "Chocolate en barra",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 40,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 4500.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "proveedor_nombre": "Panader\u00eda UADE",
+            "fecha_vencimiento": "24-11-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1012": {
+            "nombre": "Azucar",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 30,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 650.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV003",
+            "proveedor_nombre": "Ledesma",
+            "fecha_vencimiento": "31-12-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1013": {
+            "nombre": "Azucar mascabo",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 4,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 2500.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV003",
+            "proveedor_nombre": "Ledesma",
+            "fecha_vencimiento": "08-04-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1014": {
+            "nombre": "Yerba",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 800,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 3850.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV004",
+            "proveedor_nombre": "Playadito",
+            "fecha_vencimiento": "03-10-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1015": {
+            "nombre": "Chocolinas",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 255,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1255.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV005",
+            "proveedor_nombre": "Arcor",
+            "fecha_vencimiento": "03-04-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1016": {
+            "nombre": "Pure de tomate",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 980,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 650.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV005",
+            "proveedor_nombre": "Arcor",
+            "fecha_vencimiento": "24-07-2027",
+            "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
     "proveedores": {
@@ -163,12 +259,30 @@
             "direccion": "Calle Rivadavia 5678",
             "telefono": "+54 11 8765-4321",
             "email": "info@uadelacteos.com"
+        },
+        "PROV003": {
+            "nombre": "Ledesma",
+            "direccion": "Calle Sarmiento 570",
+            "telefono": "+54 11 7890-4024",
+            "email": "info@ledesma.com"
+        },
+        "PROV004": {
+            "nombre": "Playadito",
+            "direccion": "Cooperativa Agricola",
+            "telefono": "+54 9 03758 \u2013 422182",
+            "email": "atconsumidores@cooperativaliebig.com.ar"
+        },
+        "PROV005": {
+            "nombre": "Arcor",
+            "direccion": "Calle Alberti 780",
+            "telefono": "0800-333-3033",
+            "email": "arcor@arcor.com"
         }
     },
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 10,
+        "total_productos": 16,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }

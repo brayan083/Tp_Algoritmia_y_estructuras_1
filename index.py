@@ -1,6 +1,5 @@
 import json
 import os
-from datetime import datetime
 from tabulate import tabulate
 
 # Ruta del archivo JSON
@@ -83,9 +82,63 @@ def ver_inventario(cargar_inventario):
         print(f"Email: {proveedor['email']}")
         print("-" * 30)
 
-def agregar_producto(nombre, cantidad, precio, proveedor, fecha):
+def mostrar_proveedores():
     inventario = cargar_inventario()
+    proveedores = inventario.get("proveedores", {})
     
+    if not proveedores:
+        print("No hay proveedores registrados.")
+        return None
+
+    return proveedores
+
+def agregar_nuevo_proveedor(inventario):
+    print("\n--- Agregar Nuevo Proveedor ---")
+    nombre_proveedor = input("Nombre del proveedor: ").strip()
+    direccion = input("Dirección del proveedor: ").strip()
+    telefono = input("Teléfono del proveedor: ").strip()
+    email = input("Email del proveedor: ").strip()
+
+    #crea un codigo para el proveedor
+    codigo_proveedor = f"PROV{len(inventario['proveedores']) + 1:03}"
+
+    #agrega el nuevo proveedor al inventario
+    inventario["proveedores"][codigo_proveedor] = {
+        "nombre": nombre_proveedor,
+        "direccion": direccion,
+        "telefono": telefono,
+        "email": email
+    }
+    guardar_inventario(inventario)
+
+    print(f"Proveedor '{nombre_proveedor}' agregado exitosamente con el código {codigo_proveedor}.")
+    
+    return codigo_proveedor, nombre_proveedor
+
+def seleccionar_proveedor(proveedores, inventario):
+    while True:
+        print("\nProveedores disponibles:")
+        for codigo, datos in proveedores.items():
+            print(f"Código: {codigo} - Nombre: {datos['nombre']}")
+        
+        print("\nIngrese el código del proveedor elegido o escriba '1' para agregar un nuevo proveedor:")
+        codigo_proveedor = input("Código del proveedor: ").strip().upper()
+
+        if codigo_proveedor in proveedores:
+            return codigo_proveedor, proveedores[codigo_proveedor]["nombre"]
+        elif codigo_proveedor == "1" or codigo_proveedor == 1:
+            return agregar_nuevo_proveedor(inventario)
+        else:
+            print("Código inválido. Intente nuevamente.")
+
+def agregar_producto(nombre, cantidad, precio, fecha):
+    inventario = cargar_inventario()
+    proveedores = mostrar_proveedores()
+    if not proveedores:
+        print("No se puede agregar el producto sin proveedores.")
+        return
+
+    proveedor_codigo, proveedor_nombre = seleccionar_proveedor(proveedores, inventario)
     #crea un codigo unico para cada prod
     codigo = generar_codigo_unico(inventario)
     
@@ -105,13 +158,13 @@ def agregar_producto(nombre, cantidad, precio, proveedor, fecha):
         "categoria": "General",  #se puede cambiar esta categoria predeterminada
         "cantidad": {"valor": cantidad, "unidad": "unidad"},
         "precio": {"valor": precio, "moneda": "ARS"},
-        "proveedor_id": proveedor,
+        "proveedor_id": proveedor_codigo,
+        "proveedor_nombre": proveedor_nombre,
         "fecha_vencimiento": fecha,
         "fecha_ultima_actualizacion": formatear(procesar_fecha("01-01-2024"))
     }
     
     inventario["productos"][codigo] = producto
-    
     inventario["metadata"]["total_productos"] = len(inventario["productos"])
     
     guardar_inventario(inventario)
@@ -368,8 +421,7 @@ def main():
             cantidad = int(input("Ingrese la cantidad: "))
             precio = float(input("Ingrese el precio: "))
             fecha = validar_fecha() #se valida la fecha de vencimiento
-            proveedor = input("Ingrese el nombre del Proveedor: ")
-            agregar_producto(nombre, cantidad, precio, proveedor, fecha) #Codigo no se envia
+            agregar_producto(nombre, cantidad, precio, fecha)
             continuar()
         
         if opcion == "3": #Buscar producto
@@ -422,7 +474,7 @@ def main():
                 
                 else:
                     print("Opción inválida")
-                    
+
             continuar()
                  
         #Opcion de borrado por codigo
