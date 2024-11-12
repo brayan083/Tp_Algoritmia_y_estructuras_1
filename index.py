@@ -255,40 +255,48 @@ def borrar_producto(dato):
 # Función para contar el número total de productos en el inventario
 def reporte_total_productos():
     inventario = cargar_inventario()
-    total_productos = len(inventario)
+    total_productos = len(inventario['productos'])
     print(f"Total de productos en el inventario: {total_productos}")
 
 # Función para calcular el valor total del inventario
 def reporte_valor_inventario():
     inventario = cargar_inventario()
-    valor_total = sum(producto['precio'] * producto['cantidad'] for producto in inventario)
+    valor_total = sum(producto['precio']['valor'] * producto['cantidad']['valor'] 
+                      for producto in inventario ['productos'].values())
     print(f"Valor total del inventario: ${valor_total:.2f}")
 
 # Función para contar el número total de unidades de productos
 def reporte_total_unidades():
     inventario = cargar_inventario()
-    total_unidades = sum(producto['cantidad'] for producto in inventario)
+    total_unidades = sum(producto['cantidad']['valor'] for producto in inventario['productos'].values())
     print(f"Total de unidades en el inventario: {total_unidades}")
 
 # Función para mostrar productos por proveedor
 def reporte_productos_por_proveedor(proveedor):
     inventario = cargar_inventario()
-    productos_proveedor = [producto for producto in inventario if producto['proveedor'] == proveedor]
+    #convierte el nombre del proveedor ingresado a minusculas
+    proveedor = proveedor.lower()
+    #filtra los productos por proveedor usando un diccionario y usando .lower() en el id del proveedor de cada producto
+    productos_proveedor = {
+        codigo: producto 
+        for codigo, producto in inventario['productos'].items() 
+        if producto['proveedor_id'].lower() == proveedor
+    }
+
     if productos_proveedor:
-        print(f"Productos del proveedor {proveedor}:")
-        for producto in productos_proveedor:
-            print(f"Código: {producto['codigo']}, Nombre: {producto['nombre']}, Cantidad: {producto['cantidad']}, Precio: {producto['precio']}")
+        print(f"Productos del proveedor {proveedor.capitalize()}:")
+        mostrar_tabla(productos_proveedor)
     else:
-        print(f"No se encontraron productos del proveedor {proveedor}")
+        print(f"No se encontraron productos del proveedor {proveedor.capitalize()}")
 
 # Función para mostrar los productos más caros
 def reporte_productos_mas_caros():
     inventario = cargar_inventario()
-    productos_mas_caros = sorted(inventario, key=precio_producto, reverse=True)[:5]
+    productos_mas_caros = dict(sorted(inventario['productos'].items(), key=lambda x: x[1]['precio']['valor'], reverse=True)[:5])
+
     if productos_mas_caros:
         print(f"Top 5 productos más caros:")
-        for producto in productos_mas_caros:
-            print(f"Código: {producto['codigo']}, Nombre: {producto['nombre']}, Precio: {producto['precio']}")
+        mostrar_tabla(productos_mas_caros)
     else:
         print(f"No se encontraron productos")
 
@@ -392,29 +400,29 @@ def main():
                     reporte_total_productos()
                     continuar()
                 
-                if opcion_reporte == "2":
+                elif opcion_reporte == "2":
                     reporte_valor_inventario()
                     continuar()
                 
-                if opcion_reporte == "3":
+                elif opcion_reporte == "3":
                     reporte_total_unidades()
                     continuar()
                 
-                if opcion_reporte == "4":
+                elif opcion_reporte == "4":
                     proveedor = input("Ingrese el nombre del proveedor: ")
                     reporte_productos_por_proveedor(proveedor)
                     continuar()
                     
-                if opcion_reporte == "5":
+                elif opcion_reporte == "5":
                     reporte_productos_mas_caros()
                     continuar()
                 
-                if opcion_reporte == "-1":
+                elif opcion_reporte == "-1":
                     bandera = False
                 
-                if int(opcion_reporte) not in range(1, 5) and opcion_reporte != "-1":
+                else:
                     print("Opción inválida")
-            
+                    
             continuar()
                  
         #Opcion de borrado por codigo

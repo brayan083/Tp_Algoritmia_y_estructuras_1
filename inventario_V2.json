@@ -134,6 +134,21 @@
             "proveedor_id": "Cerealitas",
             "fecha_vencimiento": "24-12-2025",
             "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1010": {
+            "nombre": "Copos de maiz",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 24,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 570.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Granix",
+            "fecha_vencimiento": "23-09-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
     "proveedores": {
@@ -153,7 +168,7 @@
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 9,
+        "total_productos": 10,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }
