@@ -54,33 +54,35 @@ def validar_campos(cantidad, precio, fecha):
 #Función para ver el inventario
 def ver_inventario(cargar_inventario):
     inventario = cargar_inventario()
+
+    if not inventario["productos"]:
+        print("No hay productos en el inventario.")
+        return
+    
     print("Inventario actual:")
-    for codigo, producto in inventario["productos"].items():
-        print(f"Código: {codigo}")
-        print(f"Nombre: {producto['nombre']}")
-        print(f"Categoría: {producto['categoria']}")
-        print(f"Cantidad: {producto['cantidad']['valor']} {producto['cantidad']['unidad']}")
-        print(f"Precio: {producto['precio']['valor']} {producto['precio']['moneda']}")
-        print(f"Proveedor ID: {producto['proveedor_id']}")
-        print(f"Fecha de vencimiento: {producto['fecha_vencimiento']}")
-        print(f"Última actualización: {producto['fecha_ultima_actualizacion']}")
-        print("-" * 30)
+    headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
+    datos_productos = [[codigo, producto["nombre"], producto["categoria"], 
+                        f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                        producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
+                       for codigo, producto in inventario["productos"].items()]
+    mostrar_tabla(datos_productos, headers_productos)
 
     print("\nMetadatos del inventario:")
-    print(f"Versión: {inventario['metadata']['version']}")
-    print(f"Última actualización: {inventario['metadata']['ultima_actualizacion']}")
-    print(f"Total de productos: {inventario['metadata']['total_productos']}")
-    print(f"Total de proveedores: {inventario['metadata']['total_proveedores']}")
-    print(f"Valor total del inventario: {inventario['metadata']['valor_total_inventario']} {inventario['productos'][next(iter(inventario['productos']))]['precio']['moneda']}")
+    headers_metadatos = ["Metadatos", "Valores"]
+    datos_metadatos = [
+        ["Versión", inventario['metadata'].get('version', 'N/A')],
+        ["Última actualización", inventario['metadata'].get('ultima_actualizacion', 'N/A')],
+        ["Total de productos", inventario['metadata'].get('total_productos', 0)],
+        ["Total de proveedores", inventario['metadata'].get('total_proveedores', 0)],
+        ["Valor total del inventario (ARS)", inventario['metadata'].get('valor_total_inventario', 0.0)]
+    ]
+    mostrar_tabla(datos_metadatos, headers_metadatos)
 
     print("\nInformación de proveedores:")
-    for prov_id, proveedor in inventario["proveedores"].items():
-        print(f"ID: {prov_id}")
-        print(f"Nombre: {proveedor['nombre']}")
-        print(f"Dirección: {proveedor['direccion']}")
-        print(f"Teléfono: {proveedor['telefono']}")
-        print(f"Email: {proveedor['email']}")
-        print("-" * 30)
+    headers_proveedores = ["ID", "Nombre", "Dirección", "Teléfono", "Email"]
+    datos_proveedores = [[prov_id, proveedor["nombre"], proveedor["direccion"], proveedor["telefono"], proveedor["email"]]
+                         for prov_id, proveedor in inventario["proveedores"].items()]
+    mostrar_tabla(datos_proveedores, headers_proveedores)
 
 def mostrar_proveedores():
     inventario = cargar_inventario()
@@ -208,8 +210,9 @@ def formatear(valor):
 def buscar_producto(id_producto):
     inventario = cargar_inventario()
     productos = inventario['productos']
-    #divide la busqueda en palabras clave
-    palabras_clave = id_producto.lower().split()
+    palabras_clave = id_producto.lower().split() #divide la busqueda en palabras clave
+
+    headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
 
     #busca productos que tengan alguna de las palabras clave en su nombre o codigo
     encontrados = {}
@@ -220,7 +223,7 @@ def buscar_producto(id_producto):
         if any(palabra in nombre_producto for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
             encontrados[codigo] = producto
 
-    #muestra ugerencias de busqueda si no se encuentra un resultado
+    #muestra sugerencias de busqueda si no se encuentra un resultado
     if not encontrados:
         print("No se encontró ningún producto exacto. Mostrando sugerencias similares:")
         sugerencias = {}
@@ -230,20 +233,25 @@ def buscar_producto(id_producto):
             if any(palabra in nombre_producto for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
                 sugerencias[codigo] = producto
         if sugerencias:
-            mostrar_tabla(sugerencias)
+            datos_sugerencias = [[codigo, producto["nombre"], producto["categoria"], 
+                                  f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                                  producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
+                                 for codigo, producto in sugerencias.items()]
+            mostrar_tabla(datos_sugerencias, headers_productos)
+            mostrar_resumen(sugerencias)
         else:
             print("No hay productos que coincidan con la búsqueda.")
     else:
         print("Resultados de la búsqueda:")
-        mostrar_tabla(encontrados)
+        datos_encontrados = [[codigo, producto["nombre"], producto["categoria"], 
+                              f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                              producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
+                             for codigo, producto in encontrados.items()]
+        mostrar_tabla(datos_encontrados, headers_productos)
+        mostrar_resumen(encontrados)
 
 # Funcion que muestra los productos en una tabla usando la lib tabulate y agrega paginacion
-def mostrar_tabla(productos, page_size=5):
-    headers = ["Código", "Nombre", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
-    datos = [[codigo, producto["nombre"], producto["cantidad"]["valor"],
-              producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
-             for codigo, producto in productos.items()]
-    
+def mostrar_tabla(datos, headers, page_size=5): 
     #paginacion
     total_paginas = (len(datos) + page_size - 1) // page_size  #calcula numero de páginas
     for page in range(total_paginas):
@@ -255,7 +263,6 @@ def mostrar_tabla(productos, page_size=5):
             continuar_pagina = input("Mostrar siguiente página? (s/n): ")
             if continuar_pagina.lower() != "s":
                 break  
-    mostrar_resumen(productos)
 
 # Funcion que muestra un resumen de los productos encontrados
 def mostrar_resumen(productos):
