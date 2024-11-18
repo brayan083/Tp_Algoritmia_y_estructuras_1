@@ -133,6 +133,33 @@ def seleccionar_proveedor(proveedores, inventario):
         else:
             print("Código inválido. Intente nuevamente.")
 
+def buscarProveedores(id_proveedor):
+    inventario = cargar_inventario()
+    proveedores = inventario.get("proveedores", {})
+
+    if not proveedores:
+        print("No hay proveedores registrados.")
+        return
+
+    palabras_clave = id_proveedor.lower().split() #busca por palabras clave
+
+    #muestra los proveedores que coincidan con las palabras clave
+    encontrados = {}
+    for codigo, proveedor in proveedores.items():
+        nombre_proveedor = proveedor["nombre"].lower()
+        if any(palabra in nombre_proveedor for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
+            encontrados[codigo] = proveedor
+
+    if not encontrados:
+        print("No se encontró ningún proveedor que coincida con la búsqueda.")
+    else:
+        print("\nResultados de la búsqueda:")
+        headers_proveedores = ["Código", "Nombre", "Dirección", "Teléfono", "Email"]
+        datos_encontrados = [[codigo, proveedor["nombre"], proveedor["direccion"], proveedor["telefono"], proveedor["email"]]
+                             for codigo, proveedor in encontrados.items()]
+        
+        mostrar_tabla(datos_encontrados, headers_proveedores)
+
 def agregar_producto(nombre, cantidad, precio, fecha):
     inventario = cargar_inventario()
     proveedores = mostrar_proveedores()
@@ -185,10 +212,8 @@ def es_fecha_valida(fecha):
 
     if not (1 <= mes <= 12):
         return False
-
     if not (1 <= dia <= dias_por_mes[mes - 1]):
         return False
-
     return True
 
 def procesar_fecha(fecha):
@@ -225,7 +250,7 @@ def buscar_producto(id_producto):
 
     #muestra sugerencias de busqueda si no se encuentra un resultado
     if not encontrados:
-        print("No se encontró ningún producto exacto. Mostrando sugerencias similares:")
+        print("No se encontro ningun producto exacto. Mostrando sugerencias similares:")
         sugerencias = {}
         #sugerencias basadas en las palabras clave
         for codigo, producto in productos.items():
@@ -234,7 +259,7 @@ def buscar_producto(id_producto):
                 sugerencias[codigo] = producto
         if sugerencias:
             datos_sugerencias = [[codigo, producto["nombre"], producto["categoria"], 
-                                  f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                                  f"{producto['cantidad']['valor']} {producto['cantidad']['unidades']}",
                                   producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
                                  for codigo, producto in sugerencias.items()]
             mostrar_tabla(datos_sugerencias, headers_productos)
@@ -270,7 +295,7 @@ def mostrar_resumen(productos):
     valor_total = sum(producto["precio"]["valor"] * producto["cantidad"]["valor"] for producto in productos.values())
     print("\nResumen:")
     print(f"Total de productos encontrados: {total_productos}")
-    print(f"Valor total de los productos: ARS {valor_total:.2f}")
+    print(f"Valor total de los productos: ARS {valor_total:.2f} \n")
 
 # Función para buscar un producto por nombre o código
 def Buscarpalabras(palabra):
@@ -334,20 +359,48 @@ def reporte_total_unidades():
 # Función para mostrar productos por proveedor
 def reporte_productos_por_proveedor(proveedor):
     inventario = cargar_inventario()
-    #convierte el nombre del proveedor ingresado a minusculas
-    proveedor = proveedor.lower()
-    #filtra los productos por proveedor usando un diccionario y usando .lower() en el id del proveedor de cada producto
+    proveedor = proveedor.lower()#convierte el nombre del proveedor a minusculas
+
+    #filtra los productos por nombre o codigo proveedor usando un diccionario y usando .lower() en el id del proveedor de cada producto
+    proveedores_por_nombre = {
+        datos['nombre'].lower(): prov_id
+        for prov_id, datos in inventario['proveedores'].items()
+    }
+    proveedores_por_codigo = {
+        prov_id.lower(): prov_id
+        for prov_id in inventario['proveedores'].keys()
+    }
+
+    #verifica si se busca al proveedor por nombre o por codigo
+    proveedor_id = proveedores_por_codigo.get(proveedor) or proveedores_por_nombre.get(proveedor)
+
+    if not proveedor_id:
+        print(f"No se encontró un proveedor con el nombre '{proveedor.capitalize()}'.")
+        return
+    
     productos_proveedor = {
         codigo: producto 
         for codigo, producto in inventario['productos'].items() 
-        if producto['proveedor_id'].lower() == proveedor
+        if producto['proveedor_id'].lower() == proveedor_id.lower()
     }
 
     if productos_proveedor:
-        print(f"Productos del proveedor {proveedor.capitalize()}:")
-        mostrar_tabla(productos_proveedor)
+        print(f"Productos del proveedor {proveedor.capitalize()} ({proveedor_id}):")
+        headers = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Fecha de Vencimiento"]
+        datos = [
+            [
+                codigo,
+                producto["nombre"],
+                producto["categoria"],
+                f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                producto["precio"]["valor"],
+                producto["fecha_vencimiento"],
+            ]
+            for codigo, producto in productos_proveedor.items()
+        ]
+        mostrar_tabla(datos, headers)
     else:
-        print(f"No se encontraron productos del proveedor {proveedor.capitalize()}")
+        print(f"No se encontraron productos del proveedor {proveedor.capitalize()} ({proveedor_id}).")
 
 # Función para mostrar los productos más caros
 def reporte_productos_mas_caros():
@@ -356,7 +409,12 @@ def reporte_productos_mas_caros():
 
     if productos_mas_caros:
         print(f"Top 5 productos más caros:")
-        mostrar_tabla(productos_mas_caros)
+        headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
+        datos_productos = [[codigo, producto["nombre"], producto["categoria"],
+                            f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                            producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
+                           for codigo, producto in productos_mas_caros.items()]
+        mostrar_tabla(datos_productos, headers_productos)
     else:
         print(f"No se encontraron productos")
 
@@ -384,9 +442,10 @@ def menu_opciones():
     print("| 1. Ver inventario              |")
     print("| 2. Agregar producto            |")
     print("| 3. Buscar producto             |")
-    print("| 4. Actualizar cantidad         |")
-    print("| 5. Reportes                    |")
-    print("| 6. Borrar producto             |")
+    print("| 4. Buscar proveedor            |")
+    print("| 5. Actualizar cantidad         |")
+    print("| 6. Reportes                    |")
+    print("| 7. Borrar producto             |")
     print("| -1. Salir                      |")
     print(" --------------------------------\n")
 
@@ -435,8 +494,13 @@ def main():
             id_producto = input("Ingrese el código o el nombre: ")
             buscar_producto(id_producto)
             continuar()
+        
+        if opcion == "4": #Buscar proveedor
+            id_proveedor = input("Ingrese el código o el nombre del proveedor: ")
+            buscarProveedores(id_proveedor)
+            continuar()
             
-        if opcion == "4":
+        if opcion == "5":
             codigo = input("Ingrese el código: ")
             nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
             nombre_producto = actualizar_cantidad(codigo, nueva_cantidad)
@@ -447,7 +511,7 @@ def main():
                 print("Producto no encontrado")
             continuar()   
             
-        if opcion == "5":
+        if opcion == "6":
             bandera = True
             while bandera:
                 menu_reportes()
@@ -468,7 +532,7 @@ def main():
                     continuar()
                 
                 elif opcion_reporte == "4":
-                    proveedor = input("Ingrese el nombre del proveedor: ")
+                    proveedor = input("Ingrese el nombre o codigo del proveedor: ")
                     reporte_productos_por_proveedor(proveedor)
                     continuar()
                     
@@ -485,11 +549,11 @@ def main():
             continuar()
                  
         #Opcion de borrado por codigo
-        if opcion == "6":
+        if opcion == "7":
             metodo = input("Ingrese el código o nombre del producto a eliminar: ")
             borrar_producto(metodo)
            
-        # Op 
+        #Opcion que permite salir del programa 
         if opcion == "-1":
             Start = False
             print("Saliendo del programa... ¡Hasta luego!")
