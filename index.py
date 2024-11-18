@@ -140,8 +140,8 @@ def agregar_producto(nombre, cantidad, precio, fecha):
 
     proveedor_codigo, proveedor_nombre = seleccionar_proveedor(proveedores, inventario)
     #crea un codigo unico para cada prod
-    codigo = generar_codigo_unico(inventario)
-    
+    nuevo_codigo = generar_codigo_unico(inventario)
+
     #validar precio y cantidad
     if not validar_campos(cantidad, precio, fecha):
         return
