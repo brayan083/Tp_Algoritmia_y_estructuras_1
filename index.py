@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from tabulate import tabulate
 
 # Ruta del archivo JSON
@@ -24,8 +25,11 @@ def guardar_inventario(inventario):
 #crea un codigo unico para cada producto
 def generar_codigo_unico(inventario):
     codigo_base = 1000
-    total_productos = inventario['metadata'].get("total_productos", 0)
-    return str(codigo_base + total_productos + 1)
+    productos = inventario.get('productos', {})
+
+    max_codigo = max((int(codigo) for codigo in productos.keys()), default=codigo_base)
+    nuevo_codigo = max_codigo + 1
+    return str(nuevo_codigo)
 
 # Función para validar campos del producto
 def validar_campos(cantidad, precio, fecha):
@@ -134,13 +138,17 @@ def seleccionar_proveedor(proveedores, inventario):
 def agregar_producto(nombre, cantidad, precio, fecha):
     inventario = cargar_inventario()
     proveedores = mostrar_proveedores()
+    productos = inventario["productos"]
     if not proveedores:
         print("No se puede agregar el producto sin proveedores.")
         return
 
     proveedor_codigo, proveedor_nombre = seleccionar_proveedor(proveedores, inventario)
     #crea un codigo unico para cada prod
-    nuevo_codigo = generar_codigo_unico(inventario)
+    codigo = generar_codigo_unico(inventario)
+    if codigo in productos:
+        print(f"Error: El código {codigo} ya existe. No se puede agregar el producto.")
+        return
 
     #validar precio y cantidad
     if not validar_campos(cantidad, precio, fecha):
@@ -170,14 +178,26 @@ def agregar_producto(nombre, cantidad, precio, fecha):
     guardar_inventario(inventario)
     print(f"Producto '{nombre}' agregado exitosamente con el código {codigo}.")
 
+#Establece los patrones para que se reciba correctamente la fecha
+def validar_formato_fecha(fecha):
+    patron = r"^(0[1-9]|[12][0-9]|3[01])[-/ ](0[1-9]|1[0-2])[-/ ][0-9]{4}$"
+    return bool(re.match(patron, fecha)) #Sera True si la fecha coincide con patron
+
 def es_bisiesto(anio):
     return (anio % 4 == 0 and anio % 100 != 0) or (anio % 400 == 0)
 
 def es_fecha_valida(fecha):
+    if not validar_formato_fecha(fecha):  #Busca validar el formato
+        return False
+    
     dia, mes, anio = procesar_fecha(fecha)
-    dia = int(dia)
-    mes = int(mes)
-    anio = int(anio)
+    try:
+        dia = int(dia)
+        mes = int(mes)
+        anio = int(anio)
+    except ValueError:
+        return False
+
 
     dias_por_mes = [31, 29 if es_bisiesto(anio) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 

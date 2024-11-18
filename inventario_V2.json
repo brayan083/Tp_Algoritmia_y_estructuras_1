@@ -1,6 +1,6 @@
 {
     "productos": {
-        "002": {
+        "1002": {
             "nombre": "Leche",
             "categoria": "L\u00e1cteos",
             "cantidad": {
@@ -166,6 +166,38 @@
             "proveedor_nombre": "Luana Industrys",
             "fecha_vencimiento": "12-11-2025",
             "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1013": {
+            "nombre": "Terrabusi",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 200,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 4000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV007",
+            "proveedor_nombre": "Luana Industrys",
+            "fecha_vencimiento": "25-01-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1014": {
+            "nombre": "Harina pan",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 500,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1700.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV009",
+            "proveedor_nombre": "Brayan Industrys",
+            "fecha_vencimiento": "17-01-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
     "proveedores": {
@@ -216,12 +248,18 @@
             "direccion": "Monserrat",
             "telefono": "+54 11 1212-3434",
             "email": "uadeFarm@uade.edu.ar"
+        },
+        "PROV009": {
+            "nombre": "Brayan Industrys",
+            "direccion": "Merlo",
+            "telefono": "+54 9 11 6666 6666",
+            "email": "brayancito@gmail.com"
         }
     },
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 11,
+        "total_productos": 13,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }
