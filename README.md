@@ -33,8 +33,8 @@
 
 #### Pasos para ejecutar este proyecto en tu entorno local:
 
-#### 1. Instala Visual Studio Code si no lo tienes instalado.
+#### 1. Instala [Visual Studio Code](https://code.visualstudio.com/Download) si no lo tienes instalado.
 #### 2. Instala Python 3 visitando la pagina oficial y siguiendo los pasos indicados en la misma: https://www.python.org/downloads/
-#### 3. Clona el repositorio con el comando: `git clone`
+#### 3. Clona el repositorio con el comando: `git clone <enlace a repositorio>`
 #### 4. Instala las dependencias necesarias ejecutando: `pip3 install <nombre_paquete>`.
 #### 5. Ejecuta el archivo index.py con la opcion ejecutar del IDE utilizado o con el comando `python index.py` para poder utilizar el programa.
