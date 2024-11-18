@@ -601,7 +601,7 @@ def main():
                 
                 if opcion_editar=="5": #Con formato proveedor
                     codigo = input("Ingrese el código: ")
-                    nuevo_proveedor = int(input("Ingrese el proveedor: "))
+                    nuevo_proveedor = input("Ingrese el proveedor: ")
                     inventario = cargar_inventario()
                     nombre_proveedor = crear_nombre_proveedor(nuevo_proveedor,inventario)
                     nombre_producto= editar_proveedor(codigo,nuevo_proveedor)
