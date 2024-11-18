@@ -386,10 +386,10 @@ def editar_nombre(codigo, nuevo_nombre):
     productos = inventario['productos']
 
     if codigo in productos:
+        nombre_viejo = productos[codigo]["nombre"]  #guarda el nombre del producto
         productos[codigo]["nombre"] = nuevo_nombre
-        nombre_producto = productos[codigo]["nombre"]  #guarda el nombre del producto
         guardar_inventario(inventario)
-        return nombre_producto
+        return nombre_viejo
 
 def editar_precio(codigo,nuevo_precio):
     inventario = cargar_inventario()
@@ -560,7 +560,7 @@ def main():
                     nuevo_nombre = input("Ingrese el nuevo nombre: ")
                     nombre_producto = editar_nombre(codigo, nuevo_nombre)
                     if nombre_producto:
-                        print(f"Nombre del producto '{nombre_producto}' actualizado a {nuevo_precio}.")
+                        print(f"Nombre del producto '{nombre_producto}' actualizado a {nuevo_nombre}.")
                     else:
                         print("Producto no encontrado")
                     continuar()
@@ -588,7 +588,7 @@ def main():
                         print("Producto no encontrado")
                     continuar()
 
-                if opcion_editar=="4": ########### FALTA AGREGAR VALIDACIÓN DE FECHA######
+                if opcion_editar=="4": #Editar fecha
                     codigo = input("Ingrese el código: ")
                     nueva_fecha = validar_fecha()
                     nombre_producto= editar_fecha(codigo, nueva_fecha)

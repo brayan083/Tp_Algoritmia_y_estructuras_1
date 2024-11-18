@@ -2,14 +2,16 @@
     "productos": {
         "001": {
             "nombre": "Pan",
-            "categoria": "Panadería",
+            "categoria": "Panader\u00eda",
             "cantidad": {
-                "valor": 12,
+                "valor": 400,
                 "unidad": "unidades"
             },
             "precio": {
-                "valor": 20.0,
-                "moneda": "ARS"
+                "valor": 35,
+                "moneda": "ARS",
+                "fecha_vencimiento": "30/03/2001",
+                "fecha_ultima_actualizacion": "2024/18/11"
             },
             "proveedor_id": "PROV001",
             "fecha_vencimiento": "2024-12-31",
@@ -17,7 +19,7 @@
         },
         "002": {
             "nombre": "Leche",
-            "categoria": "Lácteos",
+            "categoria": "L\u00e1cteos",
             "cantidad": {
                 "valor": 5,
                 "unidad": "litros"
@@ -33,13 +35,13 @@
     },
     "proveedores": {
         "PROV001": {
-            "nombre": "Panadería UADE",
+            "nombre": "Panader\u00eda UADE",
             "direccion": "Av. Independencia 1234",
             "telefono": "+54 11 1234-5678",
             "email": "contacto@panaderiauade.com"
         },
         "PROV002": {
-            "nombre": "UADE Lácteos",
+            "nombre": "UADE L\u00e1cteos",
             "direccion": "Calle Rivadavia 5678",
             "telefono": "+54 11 8765-4321",
             "email": "info@uadelacteos.com"
