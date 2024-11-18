@@ -138,6 +138,31 @@ def seleccionar_proveedor(proveedores, inventario):
         else:
             print("Código inválido. Intente nuevamente.")
 
+def cambiar_proveedor(proveedores, inventario, codigo_producto):
+    lista_proveedores = []
+    productos = inventario['productos']
+    
+    for codigo_proveedor, datos in proveedores.items():
+        lista_proveedores.append(codigo_proveedor)
+    
+    print('')
+    while True:
+        print("\nProveedores disponibles:")
+        i = 0
+        for codigo_proveedor, datos in proveedores.items():
+            i += 1
+            print(f"{i}) Código: {codigo_proveedor} - Nombre: {datos['nombre']}")
+                    
+        numero = int(input('Ingrese el numero: '))
+        if numero in range(1, len(lista_proveedores)+1):
+            productos[codigo_producto]["proveedor_id"] = lista_proveedores[numero-1]
+            productos[codigo_producto]["fecha_ultima_actualizacion"] = datetime.now().strftime("%Y/%d/%m")
+            guardar_inventario(inventario)
+            print('El proveedor del PRODUCTO se cambió correctamente')
+            return
+        else:
+            print('Numero inválido!')
+
 def agregar_producto(nombre, cantidad, precio, fecha):
     inventario = cargar_inventario()
     proveedores = mostrar_proveedores()
@@ -406,11 +431,12 @@ def editar_fecha(codigo,nueva_fecha):
     productos = inventario['productos']
 
     if codigo in productos:
-        productos[codigo]["precio"]["fecha_vencimiento"] = nueva_fecha
-        productos[codigo]["precio"]["fecha_ultima_actualizacion"] = datetime.now().strftime("%Y/%d/%m") #Deberia guardar la fecha actual con la libreria datetime
+        productos[codigo]["fecha_vencimiento"] = nueva_fecha
+        productos[codigo]["fecha_ultima_actualizacion"] = datetime.now().strftime("%Y/%d/%m") #Deberia guardar la fecha actual con la libreria datetime
         nombre_producto = productos[codigo]["fecha_ultima_actualizacion"] #guarda el nombre del producto
         guardar_inventario(inventario)
         return nombre_producto
+    
 def editar_proveedor(codigo,nuevo_proveedor):
     inventario = cargar_inventario()
     productos = inventario['productos']
@@ -600,16 +626,10 @@ def main():
                     continuar()
                 
                 if opcion_editar=="5": #Con formato proveedor
-                    codigo = input("Ingrese el código: ")
-                    nuevo_proveedor = input("Ingrese el proveedor: ")
                     inventario = cargar_inventario()
-                    nombre_proveedor = crear_nombre_proveedor(nuevo_proveedor,inventario)
-                    nombre_producto= editar_proveedor(codigo,nuevo_proveedor)
-                    
-                    if nombre_producto:
-                        print(f"El proveedor de {nombre_producto}' actualizado a {nuevo_proveedor}.")
-                    else:
-                        print("Producto no encontrado")
+                    proveedores = mostrar_proveedores()
+                    codigo = input("Ingrese el código del producto: ")
+                    cambiar_proveedor(proveedores, inventario, codigo)
                     continuar()
 
                 elif opcion_editar == "-1":
