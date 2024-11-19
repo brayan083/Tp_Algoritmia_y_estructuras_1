@@ -91,6 +91,7 @@ def validar_fecha(fecha):
         mes = int(mes)
         anio = int(anio)
     except ValueError:
+        registrar_error(ValueError)
         return False
 
 
@@ -409,7 +410,6 @@ def actualizar_cantidad(codigo, nueva_cantidad):
 
 #Funcion para borrar un producto
 def borrar_producto(producto_codigo):
-    comprobar = True
     try:
         inventario = cargar_inventario()
         productos = inventario.get("productos", {}) # Verificar si el producto existe en los productos
@@ -418,6 +418,7 @@ def borrar_producto(producto_codigo):
         if producto_codigo in productos:
             producto = productos[producto_codigo]
             nombre_producto = producto["nombre"]
+            comprobar = True
             while comprobar:
                 validar_borrado = input(f"¿Esta seguro de querer borrar este producto: {nombre_producto}? (si o no) \n Escriba su opcion aqui: ")
                 validar_borrado = validar_borrado.lower()
@@ -434,10 +435,13 @@ def borrar_producto(producto_codigo):
             print("Producto no encontrado en el inventario.")
     
     except ValueError as e:
+        registrar_error(e)
         print(f"Respuesta erronea: {e}")
     except KeyError as e:
+        registrar_error(e)
         print(f"Error al procesar el inventario: {e}")
     except Exception as e:
+        registrar_error(e)
         print(f"Error inesperado: {e}")
     continuar()
     
