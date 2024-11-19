@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 import os
 from tabulate import tabulate 
+from functools import reduce
 
 # Ruta del archivo JSON
 archivo_inventario = 'inventario_V2.json'
@@ -264,43 +265,63 @@ def formatear(valor):
 def buscar_producto(id_producto):
     inventario = cargar_inventario()
     productos = inventario['productos']
-    palabras_clave = id_producto.lower().split() #divide la busqueda en palabras clave
+    palabras_clave = id_producto.lower().split()  # Divide la búsqueda en palabras clave
 
     headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
 
-    #busca productos que tengan alguna de las palabras clave en su nombre o codigo
-    encontrados = {}
-    for codigo, producto in productos.items():
-        nombre_producto = producto['nombre'].lower()
-        
-        #verifica si alguna palabra clave esta en el codigo o nombre
-        if any(palabra in nombre_producto for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
-            encontrados[codigo] = producto
+    # Filtra los productos que coinciden con las palabras clave en nombre o código
+    encontrados = dict(filter(
+        lambda item: any(palabra in item[1]['nombre'].lower() for palabra in palabras_clave) or 
+                     any(palabra in item[0].lower() for palabra in palabras_clave),
+        productos.items()
+    ))
 
-    #muestra sugerencias de busqueda si no se encuentra un resultado
+    # Muestra sugerencias de búsqueda si no se encuentra un resultado
     if not encontrados:
         print("No se encontró ningún producto exacto. Mostrando sugerencias similares:")
-        sugerencias = {}
-        #sugerencias basadas en las palabras clave
-        for codigo, producto in productos.items():
-            nombre_producto = producto['nombre'].lower()
-            if any(palabra in nombre_producto for palabra in palabras_clave) or any(palabra in codigo.lower() for palabra in palabras_clave):
-                sugerencias[codigo] = producto
+        sugerencias = dict(filter(
+            lambda item: any(palabra in item[1]['nombre'].lower() for palabra in palabras_clave) or 
+                         any(palabra in item[0].lower() for palabra in palabras_clave),
+            productos.items()
+        ))
+
         if sugerencias:
-            datos_sugerencias = [[codigo, producto["nombre"], producto["categoria"], 
-                                  f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
-                                  producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
-                                 for codigo, producto in sugerencias.items()]
+            # Usa map para transformar los datos de las sugerencias a la tabla
+            datos_sugerencias = list(map(
+                lambda item: [item[0], item[1]["nombre"], item[1]["categoria"],
+                              f"{item[1]['cantidad']['valor']} {item[1]['cantidad']['unidad']}",
+                              item[1]["precio"]["valor"], item[1]["proveedor_id"], item[1]["fecha_vencimiento"]],
+                sugerencias.items()
+            ))
+
+            # Usa reduce para calcular un resumen (ejemplo: sumar cantidades totales de los productos)
+            resumen_sugerencias = reduce(
+                lambda acc, item: acc + item[1]['cantidad']['valor'], 
+                sugerencias.items(), 0
+            )
+            print(f"Total de unidades sugeridas: {resumen_sugerencias}")
+
             mostrar_tabla(datos_sugerencias, headers_productos)
             mostrar_resumen(sugerencias)
         else:
             print("No hay productos que coincidan con la búsqueda.")
     else:
         print("Resultados de la búsqueda:")
-        datos_encontrados = [[codigo, producto["nombre"], producto["categoria"], 
-                              f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
-                              producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
-                             for codigo, producto in encontrados.items()]
+        # Usa map para transformar los datos encontrados a la tabla
+        datos_encontrados = list(map(
+            lambda item: [item[0], item[1]["nombre"], item[1]["categoria"],
+                          f"{item[1]['cantidad']['valor']} {item[1]['cantidad']['unidad']}",
+                          item[1]["precio"]["valor"], item[1]["proveedor_id"], item[1]["fecha_vencimiento"]],
+            encontrados.items()
+        ))
+
+        # Usa reduce para calcular un resumen (ejemplo: sumar el valor total de los productos encontrados)
+        resumen_encontrados = reduce(
+            lambda acc, item: acc + (item[1]["precio"]["valor"] * item[1]["cantidad"]["valor"]),
+            encontrados.items(), 0
+        )
+        print(f"Valor total de los productos encontrados: {resumen_encontrados} ARS")
+
         mostrar_tabla(datos_encontrados, headers_productos)
         mostrar_resumen(encontrados)
 
