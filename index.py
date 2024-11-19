@@ -410,7 +410,7 @@ def borrar_producto(producto_codigo):
             producto = productos[producto_codigo]
             nombre_producto = producto["nombre"]
             while comprobar:
-                validar_borrado = input(f"¿Esta seguro de querer borrar este producto: {nombre_producto}? \n 1) si \n 2) no \n Escriba su opcion aqui: ")
+                validar_borrado = input(f"¿Esta seguro de querer borrar este producto: {nombre_producto}? (si o no) \n Escriba su opcion aqui: ")
                 validar_borrado = validar_borrado.lower()
                 if validar_borrado == 'si':
                     comprobar = False
