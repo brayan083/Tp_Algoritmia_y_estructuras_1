@@ -19,7 +19,7 @@ def alumnos():
         ["Brayan Zorro"],
         ["Luana Kaladjian"],
         ["Gabriel Pabón"],
-        ["Estefanía Garzilazo"]
+        ["Estefanía Sassone"]
     ]
     headers = ["Nombre del Alumno"]
     mostrar_tabla(matriz, headers)
