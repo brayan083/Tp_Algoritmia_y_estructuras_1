@@ -1,11 +1,12 @@
+from datetime import datetime
 import json
 import os
-from tabulate import tabulate
+from tabulate import tabulate 
 
 # Ruta del archivo JSON
 archivo_inventario = 'inventario_V2.json'
 
-# Función para cargar el inventario desde el archivo JSON
+# Función para cargar e inventario desde el archivo JSON
 def cargar_inventario():
     try:
         with open(archivo_inventario, 'r', encoding='UTF-8') as file:
@@ -94,6 +95,10 @@ def mostrar_proveedores():
 
     return proveedores
 
+#Da el formato al proveedor
+def crear_nombre_proveedor(codigo_proveedor,inventario ):
+    return f"PROV{len(inventario['proveedores']) + 1:03}"
+
 def agregar_nuevo_proveedor(inventario):
     print("\n--- Agregar Nuevo Proveedor ---")
     nombre_proveedor = input("Nombre del proveedor: ").strip()
@@ -102,7 +107,7 @@ def agregar_nuevo_proveedor(inventario):
     email = input("Email del proveedor: ").strip()
 
     #crea un codigo para el proveedor
-    codigo_proveedor = f"PROV{len(inventario['proveedores']) + 1:03}"
+    codigo_proveedor = crear_nombre_proveedor(codigo_proveedor,inventario)
 
     #agrega el nuevo proveedor al inventario
     inventario["proveedores"][codigo_proveedor] = {
@@ -159,6 +164,30 @@ def buscarProveedores(id_proveedor):
                              for codigo, proveedor in encontrados.items()]
         
         mostrar_tabla(datos_encontrados, headers_proveedores)
+def cambiar_proveedor(proveedores, inventario, codigo_producto):
+    lista_proveedores = []
+    productos = inventario['productos']
+    
+    for codigo_proveedor, datos in proveedores.items():
+        lista_proveedores.append(codigo_proveedor)
+    
+    print('')
+    while True:
+        print("\nProveedores disponibles:")
+        i = 0
+        for codigo_proveedor, datos in proveedores.items():
+            i += 1
+            print(f"{i}) Código: {codigo_proveedor} - Nombre: {datos['nombre']}")
+                    
+        numero = int(input('Ingrese el numero: '))
+        if numero in range(1, len(lista_proveedores)+1):
+            productos[codigo_producto]["proveedor_id"] = lista_proveedores[numero-1]
+            productos[codigo_producto]["fecha_ultima_actualizacion"] = datetime.now().strftime("%Y/%d/%m")
+            guardar_inventario(inventario)
+            print('El proveedor del PRODUCTO se cambió correctamente')
+            return
+        else:
+            print('Numero inválido!')
 
 def agregar_producto(nombre, cantidad, precio, fecha):
     inventario = cargar_inventario()
@@ -216,7 +245,7 @@ def es_fecha_valida(fecha):
         return False
     return True
 
-def procesar_fecha(fecha):
+def procesar_fecha(fecha): #No usar esta (se usa en es_fecha_valida)
     if fecha.find('-') != -1:
         dia, mes, anio = fecha.split("-")
     elif fecha.find('/') != -1:
@@ -250,7 +279,7 @@ def buscar_producto(id_producto):
 
     #muestra sugerencias de busqueda si no se encuentra un resultado
     if not encontrados:
-        print("No se encontro ningun producto exacto. Mostrando sugerencias similares:")
+        print("No se encontró ningún producto exacto. Mostrando sugerencias similares:")
         sugerencias = {}
         #sugerencias basadas en las palabras clave
         for codigo, producto in productos.items():
@@ -259,7 +288,7 @@ def buscar_producto(id_producto):
                 sugerencias[codigo] = producto
         if sugerencias:
             datos_sugerencias = [[codigo, producto["nombre"], producto["categoria"], 
-                                  f"{producto['cantidad']['valor']} {producto['cantidad']['unidades']}",
+                                  f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
                                   producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
                                  for codigo, producto in sugerencias.items()]
             mostrar_tabla(datos_sugerencias, headers_productos)
@@ -306,7 +335,7 @@ def Buscarpalabras(palabra):
         return productosencontrados
     return None
 
-# Función para actualizar la cantidad de un producto
+# Función para actualizar la cantidad de un producto                                                                        !!!!!!!!!!!!!!
 def actualizar_cantidad(codigo, nueva_cantidad):
     inventario = cargar_inventario()
     productos = inventario['productos']
@@ -434,6 +463,46 @@ def validar_fecha():
         if es_fecha_valida(fecha):
             return fecha
         print('\nLa fecha es invalida!\n')
+def editar_nombre(codigo, nuevo_nombre):
+    inventario = cargar_inventario()
+    productos = inventario['productos']
+
+    if codigo in productos:
+        nombre_viejo = productos[codigo]["nombre"]  #guarda el nombre del producto
+        productos[codigo]["nombre"] = nuevo_nombre
+        guardar_inventario(inventario)
+        return nombre_viejo
+
+def editar_precio(codigo,nuevo_precio):
+    inventario = cargar_inventario()
+    productos = inventario['productos']
+
+    if codigo in productos:
+        productos[codigo]["precio"]["valor"] = nuevo_precio
+        nombre_producto = productos[codigo]["nombre"]#guarda el nombre del producto
+        guardar_inventario(inventario)
+        return nombre_producto
+    
+def editar_fecha(codigo,nueva_fecha):
+    inventario = cargar_inventario()
+    productos = inventario['productos']
+
+    if codigo in productos:
+        productos[codigo]["fecha_vencimiento"] = nueva_fecha
+        productos[codigo]["fecha_ultima_actualizacion"] = datetime.now().strftime("%Y/%d/%m") #Deberia guardar la fecha actual con la libreria datetime
+        nombre_producto = productos[codigo]["fecha_ultima_actualizacion"] #guarda el nombre del producto
+        guardar_inventario(inventario)
+        return nombre_producto
+    
+def editar_proveedor(codigo,nuevo_proveedor):
+    inventario = cargar_inventario()
+    productos = inventario['productos']
+
+    if codigo in productos:
+        productos[codigo]["proveedor_id"] = nuevo_proveedor
+        nombre_producto = productos[codigo]["nombre"] #guarda el nombre del producto
+        guardar_inventario(inventario)
+        return nombre_producto
 
 # Función para mostrar el menú de opciones por pantalla
 def menu_opciones():
@@ -443,9 +512,9 @@ def menu_opciones():
     print("| 2. Agregar producto            |")
     print("| 3. Buscar producto             |")
     print("| 4. Buscar proveedor            |")
-    print("| 5. Actualizar cantidad         |")
-    print("| 6. Reportes                    |")
-    print("| 7. Borrar producto             |")
+    print("| 5. Reportes                    |")
+    print("| 6. Borrar producto             |")
+    print("| 7. Editar producto             |")
     print("| -1. Salir                      |")
     print(" --------------------------------\n")
 
@@ -458,6 +527,18 @@ def menu_reportes():
     print("| 3. Total de unidades           |")
     print("| 4. Productos por proveedor     |")
     print("| 5. Top 5 Productos más caros   |")
+    print("| -1. Volver al menú principal   |")
+    print(" --------------------------------\n")
+
+# Funcion para mostrar el submenu de edicion (del producto)
+def menu_edicion():
+    print("\n --------------------------------")
+    print("| Menú Edición                   |")
+    print("| 1. Nombre del producto         |")
+    print("| 2. Cantidad                    |")
+    print("| 3. Precio                      |")
+    print("| 4. Fecha                       |")
+    print("| 5. Proveedor                   |")
     print("| -1. Volver al menú principal   |")
     print(" --------------------------------\n")
 
@@ -552,6 +633,70 @@ def main():
         if opcion == "7":
             metodo = input("Ingrese el código o nombre del producto a eliminar: ")
             borrar_producto(metodo)
+        
+        #Menú de opciones de edición de productos
+        if opcion == "7":
+            bandera = True
+            while bandera:
+                menu_edicion()
+                opcion_editar = input("Ingrese una opción de edicion: ")
+                os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
+                print("")
+
+                if opcion_editar == "1":
+                    codigo = input("Ingrese el código: ")
+                    nuevo_nombre = input("Ingrese el nuevo nombre: ")
+                    nombre_producto = editar_nombre(codigo, nuevo_nombre)
+                    if nombre_producto:
+                        print(f"Nombre del producto '{nombre_producto}' actualizado a {nuevo_nombre}.")
+                    else:
+                        print("Producto no encontrado")
+                    continuar()
+                
+                
+                if opcion_editar == "2":
+                    codigo = input("Ingrese el código: ")
+                    nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
+                    nombre_producto = actualizar_cantidad(codigo, nueva_cantidad)
+
+                    if nombre_producto:
+                        print(f"Cantidad del producto '{nombre_producto}' actualizada a {nueva_cantidad} unidades.")
+                    else:
+                        print("Producto no encontrado")
+                    continuar()
+
+                if opcion_editar=="3":
+                    codigo = input("Ingrese el código: ")
+                    nuevo_precio = int(input("Ingrese el nuevo precio: "))
+                    nombre_producto= editar_precio(codigo,nuevo_precio)
+                    
+                    if nombre_producto:
+                        print(f"Precio del producto '{nombre_producto}' actualizado a ${nuevo_precio}.")
+                    else:
+                        print("Producto no encontrado")
+                    continuar()
+
+                if opcion_editar=="4": #Editar fecha
+                    codigo = input("Ingrese el código: ")
+                    nueva_fecha = validar_fecha()
+                    nombre_producto= editar_fecha(codigo, nueva_fecha)
+                    
+                    if nombre_producto:
+                        print(f"Fecha del producto '{nombre_producto}' actualizada a {nueva_fecha}.")
+                    else:
+                        print("Producto no encontrado")
+                    continuar()
+                
+                if opcion_editar=="5": #Con formato proveedor
+                    inventario = cargar_inventario()
+                    proveedores = mostrar_proveedores()
+                    codigo = input("Ingrese el código del producto: ")
+                    cambiar_proveedor(proveedores, inventario, codigo)
+                    continuar()
+
+                elif opcion_editar == "-1":
+                    bandera = False
+
            
         #Opcion que permite salir del programa 
         if opcion == "-1":
@@ -560,5 +705,6 @@ def main():
         
         if int(opcion) not in range(1, 5) and opcion != "-1":
             print("Opción inválida")
-            
+
+
 main()
