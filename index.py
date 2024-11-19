@@ -582,17 +582,6 @@ def main():
             continuar()
             
         if opcion == "5":
-            codigo = input("Ingrese el código: ")
-            nueva_cantidad = int(input("Ingrese la nueva cantidad: "))
-            nombre_producto = actualizar_cantidad(codigo, nueva_cantidad)
-
-            if nombre_producto:
-                print(f"Cantidad del producto '{nombre_producto}' actualizada a {nueva_cantidad} unidades.")
-            else:
-                print("Producto no encontrado")
-            continuar()   
-            
-        if opcion == "6":
             bandera = True
             while bandera:
                 menu_reportes()
@@ -630,7 +619,7 @@ def main():
             continuar()
                  
         #Opcion de borrado por codigo
-        if opcion == "7":
+        if opcion == "6":
             metodo = input("Ingrese el código o nombre del producto a eliminar: ")
             borrar_producto(metodo)
         
