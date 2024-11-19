@@ -7,6 +7,16 @@ from functools import reduce
 # Ruta del archivo JSON
 archivo_inventario = 'inventario_V2.json'
 
+def alumnos():
+    matriz = [
+        ["Brayan Zorro"],
+        ["Luana Kaladjian"],
+        ["Gabriel Pabón"],
+        ["Estefanía Garzilazo"]
+    ]
+    headers = ["Nombre del Alumno"]
+    mostrar_tabla(matriz, headers)
+
 # Función para cargar e inventario desde el archivo JSON
 def cargar_inventario():
     try:
@@ -178,9 +188,9 @@ def cambiar_proveedor(proveedores, inventario, codigo_producto):
         i = 0
         for codigo_proveedor, datos in proveedores.items():
             i += 1
-            print(f"{i}) Código: {codigo_proveedor} - Nombre: {datos['nombre']}")
+            print(f"{i}) Código: {codigo_proveedor} - Nombre: {datos['nombre']}") # muestra un menú enumerado
                     
-        numero = int(input('Ingrese el numero: '))
+        numero = int(input('Ingrese el numero: ')) #selecciona un proveedor
         if numero in range(1, len(lista_proveedores)+1):
             productos[codigo_producto]["proveedor_id"] = lista_proveedores[numero-1]
             productos[codigo_producto]["fecha_ultima_actualizacion"] = datetime.now().strftime("%Y/%d/%m")
@@ -266,7 +276,7 @@ def buscar_producto(id_producto):
     inventario = cargar_inventario()
     productos = inventario['productos']
     palabras_clave = id_producto.lower().split()  # Divide la búsqueda en palabras clave
-
+    #define los encabezados que se usarán en la tabla al mostrar resultados
     headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
 
     # Filtra los productos que coinciden con las palabras clave en nombre o código
@@ -278,7 +288,7 @@ def buscar_producto(id_producto):
 
     # Muestra sugerencias de búsqueda si no se encuentra un resultado
     if not encontrados:
-        print("No se encontró ningún producto exacto. Mostrando sugerencias similares:")
+        print("No se encontró ningún producto exacto. Muestra sugerencias similares:")
         sugerencias = dict(filter(
             lambda item: any(palabra in item[1]['nombre'].lower() for palabra in palabras_clave) or 
                          any(palabra in item[0].lower() for palabra in palabras_clave),
@@ -297,8 +307,7 @@ def buscar_producto(id_producto):
             # Usa reduce para calcular un resumen (ejemplo: sumar cantidades totales de los productos)
             resumen_sugerencias = reduce(
                 lambda acc, item: acc + item[1]['cantidad']['valor'], 
-                sugerencias.items(), 0
-            )
+                sugerencias.items(), 0)
             print(f"Total de unidades sugeridas: {resumen_sugerencias}")
 
             mostrar_tabla(datos_sugerencias, headers_productos)
@@ -536,6 +545,7 @@ def menu_opciones():
     print("| 5. Reportes                    |")
     print("| 6. Borrar producto             |")
     print("| 7. Editar producto             |")
+    print("| 8. Ver autores                 |")
     print("| -1. Salir                      |")
     print(" --------------------------------\n")
 
@@ -707,7 +717,10 @@ def main():
                 elif opcion_editar == "-1":
                     bandera = False
 
-           
+        if opcion=="8":
+            alumnos()
+            continuar()
+
         #Opcion que permite salir del programa 
         if opcion == "-1":
             Start = False
