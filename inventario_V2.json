@@ -1,6 +1,21 @@
 {
     "productos": {
-        "1002": {
+        "001": {
+            "nombre": "Pan",
+            "categoria": "Panader\u00eda",
+            "cantidad": {
+                "valor": 400,
+                "unidad": "unidades"
+            },
+            "precio": {
+                "valor": 35,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "fecha_vencimiento": "2024-12-31",
+            "fecha_ultima_actualizacion": "2024/19/11"
+        },
+        "002": {
             "nombre": "Leche",
             "categoria": "L\u00e1cteos",
             "cantidad": {
@@ -194,9 +209,57 @@
                 "valor": 1700.0,
                 "moneda": "ARS"
             },
-            "proveedor_id": "PROV009",
-            "proveedor_nombre": "Brayan Industrys",
-            "fecha_vencimiento": "17-01-2025",
+            "proveedor_id": "PROV004",
+            "proveedor_nombre": "Playadito",
+            "fecha_vencimiento": "03-10-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1015": {
+            "nombre": "Chocolinas",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 255,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1255.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV005",
+            "proveedor_nombre": "Arcor",
+            "fecha_vencimiento": "03-04-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1016": {
+            "nombre": "Pure de tomate",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 980,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 650.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV005",
+            "proveedor_nombre": "Arcor",
+            "fecha_vencimiento": "24-07-2027",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1017": {
+            "nombre": "Silla",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 12,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 23.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "proveedor_nombre": "Panader\u00eda UADE",
+            "fecha_vencimiento": "12-12-1222",
             "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
@@ -259,7 +322,7 @@
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 13,
+        "total_productos": 17,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }
