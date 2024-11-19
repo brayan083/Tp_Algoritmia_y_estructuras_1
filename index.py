@@ -7,12 +7,19 @@ from functools import reduce
 # Ruta del archivo JSON
 archivo_inventario = 'inventario_V2.json'
 
+# Funcion para registrar errores en un archivo de logs
+def registrar_error(error):
+    with open('logs.txt', 'a') as archivo_log:
+        fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        archivo_log.write(f"{fecha_hora} - ERROR: {error}\n")
+
 # Función para cargar e inventario desde el archivo JSON
 def cargar_inventario():
     try:
         with open(archivo_inventario, 'r', encoding='UTF-8') as file:
             return json.load(file)
     except FileNotFoundError:
+        registrar_error(FileNotFoundError)
         return {"productos": {}, "metadata": {}, "proveedores": {}}
 
 #Función para guardar el inventario en el archivo JSON
@@ -21,6 +28,7 @@ def guardar_inventario(inventario):
         with open(archivo_inventario, 'w', encoding='UTF-8') as file:
             json.dump(inventario, file, indent=4)
     except IOError as e:
+        registrar_error(e)
         print(f"Error al guardar el inventario: {e}")
 
 #crea un codigo unico para cada producto
@@ -36,6 +44,7 @@ def validar_campos(cantidad, precio, fecha):
         if cantidad < 0:
             raise ValueError("La cantidad debe ser un número positivo")
     except ValueError as e:
+        registrar_error(e)
         print(f"Error: {e}")
         return False
 
@@ -44,6 +53,7 @@ def validar_campos(cantidad, precio, fecha):
         if precio < 0:
             raise ValueError("El precio debe ser un valor positivo")
     except ValueError as e:
+        registrar_error(e)
         print(f"Error: {e}")
         return False
 
