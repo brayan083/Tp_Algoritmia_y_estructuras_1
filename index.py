@@ -41,8 +41,7 @@ def generar_codigo_unico(inventario):
     nuevo_codigo = max_codigo + 1
     return str(nuevo_codigo)
 
-# Función para validar campos del producto
-def validar_campos(cantidad, precio, fecha):
+def validar_cantidad(cantidad):
     try:
         cantidad = int(cantidad)
         if cantidad < 0:
@@ -51,7 +50,9 @@ def validar_campos(cantidad, precio, fecha):
         registrar_error(e)
         print(f"Error: {e}")
         return False
+    return True
 
+def validar_precio(precio):
     try:
         precio = float(precio)
         if precio < 0:
@@ -60,11 +61,35 @@ def validar_campos(cantidad, precio, fecha):
         registrar_error(e)
         print(f"Error: {e}")
         return False
+    return True
 
-    if not es_fecha_valida(fecha):
-        print("Error: La fecha de vencimiento es inválida")
+#Establece los patrones para que se reciba correctamente la fecha
+def validar_formato_fecha(fecha):
+    patron = r"^(0[1-9]|[12][0-9]|3[01])[-/ ](0[1-9]|1[0-2])[-/ ][0-9]{4}$"
+    return bool(re.match(patron, fecha)) #Sera True si la fecha coincide con patron
+
+def es_bisiesto(anio):
+    return (anio % 4 == 0 and anio % 100 != 0) or (anio % 400 == 0)
+
+def validar_fecha(fecha):
+    if not validar_formato_fecha(fecha):  #Busca validar el formato
+        return False
+    
+    dia, mes, anio = procesar_fecha(fecha)
+    try:
+        dia = int(dia)
+        mes = int(mes)
+        anio = int(anio)
+    except ValueError:
         return False
 
+
+    dias_por_mes = [31, 29 if es_bisiesto(anio) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+    if not (1 <= mes <= 12):
+        return False
+    if not (1 <= dia <= dias_por_mes[mes - 1]):
+        return False
     return True
 
 #Función para ver el inventario
@@ -79,8 +104,9 @@ def ver_inventario(cargar_inventario):
     headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
     datos_productos = [[codigo, producto["nombre"], producto["categoria"], 
                         f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
-                        producto["precio"]["valor"], producto["proveedor_id"], producto["fecha_vencimiento"]]
-                       for codigo, producto in inventario["productos"].items()]
+                        f"${producto['precio']['valor']}",  # Aquí se añade el símbolo $
+                        producto["proveedor_id"], producto["fecha_vencimiento"]]
+                    for codigo, producto in inventario["productos"].items()]
     mostrar_tabla(datos_productos, headers_productos)
 
     print("\nMetadatos del inventario:")
@@ -90,7 +116,7 @@ def ver_inventario(cargar_inventario):
         ["Última actualización", inventario['metadata'].get('ultima_actualizacion', 'N/A')],
         ["Total de productos", inventario['metadata'].get('total_productos', 0)],
         ["Total de proveedores", inventario['metadata'].get('total_proveedores', 0)],
-        ["Valor total del inventario (ARS)", inventario['metadata'].get('valor_total_inventario', 0.0)]
+        ["Valor total del inventario (ARS)", f"${inventario['metadata'].get('valor_total_inventario', 0.0):.2f}"]
     ]
     mostrar_tabla(datos_metadatos, headers_metadatos)
 
@@ -218,12 +244,14 @@ def agregar_producto(nombre, cantidad, precio, fecha):
     if codigo in productos:
         print(f"Error: El código {codigo} ya existe. No se puede agregar el producto.")
         return
-
-    #validar precio y cantidad
-    if not validar_campos(cantidad, precio, fecha):
+    
+    if not validar_cantidad(cantidad):
         return
     
-    if not es_fecha_valida(fecha):
+    if not validar_precio(precio):
+        return
+    
+    if not validar_fecha(fecha):
         print("La fecha de vencimiento no es válida.")
         return
     
@@ -247,34 +275,6 @@ def agregar_producto(nombre, cantidad, precio, fecha):
     guardar_inventario(inventario)
     print(f"Producto '{nombre}' agregado exitosamente con el código {codigo}.")
 
-#Establece los patrones para que se reciba correctamente la fecha
-def validar_formato_fecha(fecha):
-    patron = r"^(0[1-9]|[12][0-9]|3[01])[-/ ](0[1-9]|1[0-2])[-/ ][0-9]{4}$"
-    return bool(re.match(patron, fecha)) #Sera True si la fecha coincide con patron
-
-def es_bisiesto(anio):
-    return (anio % 4 == 0 and anio % 100 != 0) or (anio % 400 == 0)
-
-def es_fecha_valida(fecha):
-    if not validar_formato_fecha(fecha):  #Busca validar el formato
-        return False
-    
-    dia, mes, anio = procesar_fecha(fecha)
-    try:
-        dia = int(dia)
-        mes = int(mes)
-        anio = int(anio)
-    except ValueError:
-        return False
-
-
-    dias_por_mes = [31, 29 if es_bisiesto(anio) else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
-    if not (1 <= mes <= 12):
-        return False
-    if not (1 <= dia <= dias_por_mes[mes - 1]):
-        return False
-    return True
 
 def procesar_fecha(fecha): #No usar esta (se usa en es_fecha_valida)
     if fecha.find('-') != -1:
@@ -488,7 +488,7 @@ def reporte_productos_por_proveedor(proveedor):
                 producto["nombre"],
                 producto["categoria"],
                 f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
-                producto["precio"]["valor"],
+                f"${producto['precio']['valor']}",
                 producto["fecha_vencimiento"],
             ]
             for codigo, producto in productos_proveedor.items()
@@ -523,12 +523,13 @@ def validar_producto():
             return nombre
         print('\nEl nombre ya existe!\n')
 
-def validar_fecha():
+def input_fecha_validada():
     while(True):
         fecha = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
-        if es_fecha_valida(fecha):
+        if validar_fecha(fecha):
             return fecha
         print('\nLa fecha es invalida!\n')
+        
 def editar_nombre(codigo, nuevo_nombre):
     inventario = cargar_inventario()
     productos = inventario['productos']
@@ -632,7 +633,7 @@ def main():
             nombre = validar_producto()
             cantidad = int(input("Ingrese la cantidad: "))
             precio = float(input("Ingrese el precio: "))
-            fecha = validar_fecha() #se valida la fecha de vencimiento
+            fecha = input_fecha_validada() #se valida la fecha de vencimiento
             agregar_producto(nombre, cantidad, precio, fecha)
             continuar()
         
@@ -731,7 +732,7 @@ def main():
 
                 if opcion_editar=="4": #Editar fecha
                     codigo = input("Ingrese el código: ")
-                    nueva_fecha = validar_fecha()
+                    nueva_fecha = input_fecha_validada()
                     nombre_producto= editar_fecha(codigo, nueva_fecha)
                     
                     if nombre_producto:

@@ -1,7 +1,7 @@
 {
     "productos": {
         "001": {
-            "nombre": "Pan",
+            "nombre": "pan2",
             "categoria": "Panader\u00eda",
             "cantidad": {
                 "valor": 400,
@@ -12,23 +12,8 @@
                 "moneda": "ARS"
             },
             "proveedor_id": "PROV001",
-            "fecha_vencimiento": "2024-12-31",
+            "fecha_vencimiento": "12 12 1222",
             "fecha_ultima_actualizacion": "2024/19/11"
-        },
-        "002": {
-            "nombre": "Leche",
-            "categoria": "L\u00e1cteos",
-            "cantidad": {
-                "valor": 5,
-                "unidad": "litros"
-            },
-            "precio": {
-                "valor": 15.0,
-                "moneda": "ARS"
-            },
-            "proveedor_id": "PROV002",
-            "fecha_vencimiento": "2024-11-30",
-            "fecha_ultima_actualizacion": "2024-11-03"
         },
         "1003": {
             "nombre": "Trigo",
@@ -261,6 +246,38 @@
             "proveedor_nombre": "Panader\u00eda UADE",
             "fecha_vencimiento": "12-12-1222",
             "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1018": {
+            "nombre": "Pepe",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 12,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 12.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "proveedor_nombre": "Panader\u00eda UADE",
+            "fecha_vencimiento": "12-12-1212",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1019": {
+            "nombre": "Casc",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 21,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 12.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "proveedor_nombre": "Panader\u00eda UADE",
+            "fecha_vencimiento": "12-12-1221",
+            "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
     "proveedores": {
@@ -322,7 +339,7 @@
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 17,
+        "total_productos": 18,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }
