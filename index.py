@@ -5,8 +5,9 @@ import re
 from tabulate import tabulate 
 from functools import reduce
 
-# Ruta del archivo JSON
-archivo_inventario = 'inventario_V2.json'
+# Rutas de los archivos JSON
+archivo_productos = 'Productos_V3 copy.json'
+archivo_proveedores = 'Proveedores_V3.json'
 
 # Funcion para registrar errores en un archivo de logs
 def registrar_error(error):
@@ -14,33 +15,41 @@ def registrar_error(error):
         fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         archivo_log.write(f"{fecha_hora} - ERROR: {error}\n")
         
-def alumnos():
-    matriz = [
-        ["Brayan Zorro"],
-        ["Luana Kaladjian"],
-        ["Gabriel Pabón"],
-        ["Estefanía Sassone"]
-    ]
-    headers = ["Nombre del Alumno"]
-    mostrar_tabla(matriz, headers)
 
-# Función para cargar e inventario desde el archivo JSON
+# Función para cargar inventario desde los archivos JSON
 def cargar_inventario():
+    inventario = {}
     try:
-        with open(archivo_inventario, 'r', encoding='UTF-8') as file:
-            return json.load(file)
+        with open(archivo_productos, 'r', encoding='UTF-8') as file:
+            inventario.update(json.load(file))
     except FileNotFoundError:
         registrar_error(FileNotFoundError)
-        return {"productos": {}, "metadata": {}, "proveedores": {}}
+    
+    try:
+        with open(archivo_proveedores, 'r', encoding='UTF-8') as file:
+            inventario.update(json.load(file))
+    except FileNotFoundError:
+        registrar_error(FileNotFoundError)
+    
+    # print(inventario)
+    
+    return inventario
 
-#Función para guardar el inventario en el archivo JSON
+# Función para guardar el inventario en los archivos JSON
 def guardar_inventario(inventario):
     try:
-        with open(archivo_inventario, 'w', encoding='UTF-8') as file:
-            json.dump(inventario, file, indent=4)
+        with open(archivo_productos, 'w', encoding='UTF-8') as file:
+            json.dump(inventario['productos'], file, indent=4)
     except IOError as e:
         registrar_error(e)
-        print(f"Error al guardar el inventario: {e}")
+        print(f"Error al guardar los productos: {e}")
+    
+    try:
+        with open(archivo_proveedores, 'w', encoding='UTF-8') as file:
+            json.dump(inventario['proveedores'], file, indent=4)
+    except IOError as e:
+        registrar_error(e)
+        print(f"Error al guardar los proveedores: {e}")
 
 #crea un codigo unico para cada producto
 def generar_codigo_unico(inventario):
@@ -103,39 +112,104 @@ def validar_fecha(fecha):
         return False
     return True
 
-#Función para ver el inventario
-def ver_inventario(cargar_inventario):
+# Función para ver el inventario
+def ver_inventario():
     inventario = cargar_inventario()
 
     if not inventario["productos"]:
         print("No hay productos en el inventario.")
-        return
+    else:
+        mostrar_productos(inventario["productos"])
+
+    # mostrar_metadatos(inventario.get("metadata", {}))
     
+# def mostrar_metadatos(metadata):
+#     print("\nMetadatos del inventario:")
+#     headers_metadatos = ["Metadatos", "Valores"]
+#     datos_metadatos = [
+#         ["Versión", metadata.get('version', 'N/A')],
+#         ["Última actualización", metadata.get('ultima_actualizacion', 'N/A')],
+#         ["Total de productos", metadata.get('total_productos', 0)],
+#         ["Total de proveedores", metadata.get('total_proveedores', 0)],
+#         ["Valor total del inventario (ARS)", f"${metadata.get('valor_total_inventario', 0.0):.2f}"]
+#     ]
+#     mostrar_tabla(datos_metadatos, headers_metadatos)    
+
+# Función para limpiar la consola
+def limpiar_consola():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+# Función que muestra los datos en una tabla usando la librería tabulate y agrega paginación e interactividad
+def mostrar_tabla(datos, headers, page_size=5):
+    def mostrar_pagina(pagina):
+        limpiar_consola()
+        inicio = pagina * page_size
+        fin = inicio + page_size
+        print(tabulate(datos[inicio:fin], headers=headers, tablefmt="grid"))
+
+    def buscar_elemento():
+        termino = input("Ingrese el término de búsqueda: ").lower()
+        resultados = [fila for fila in datos if any(termino in str(celda).lower() for celda in fila)]
+        if resultados:
+            limpiar_consola()
+            print("\nResultados de la búsqueda:")
+            print(tabulate(resultados, headers=headers, tablefmt="grid"))
+            return True  # Indica que se realizó una búsqueda
+        else:
+            print("No se encontraron resultados.")
+            return False  # Indica que no se encontraron resultados
+
+    def ordenar_datos():
+        print("Seleccione la columna para ordenar:")
+        for i, header in enumerate(headers):
+            print(f"{i + 1}. {header}")
+        opcion = int(input("Ingrese el número de la columna: ")) - 1
+        if 0 <= opcion < len(headers):
+            # Convertir a número si es la columna de cantidad o precio
+            if headers[opcion] in ["Cantidad", "Precio (ARS)"]:
+                datos.sort(key=lambda x: float(re.sub(r'[^\d.]', '', x[opcion])))
+            else:
+                datos.sort(key=lambda x: x[opcion])
+        else:
+            print("Opción no válida.")
+
+    total_paginas = (len(datos) + page_size - 1) // page_size  # calcula número de páginas
+    pagina_actual = 0
+
+    while True:
+        mostrar_pagina(pagina_actual)
+        print(f"\nPágina {pagina_actual + 1} de {total_paginas}")
+
+        if total_paginas > 1:
+            print("\nOpciones: [d] Siguiente, [a] Anterior, [b] Buscar, [o] Ordenar, [s] Salir")
+            opcion = input("Seleccione una opción: ").lower()
+
+            if opcion == 'd' and pagina_actual < total_paginas - 1:
+                pagina_actual += 1
+            elif opcion == 'a' and pagina_actual > 0:
+                pagina_actual -= 1
+            elif opcion == 'b':
+                if buscar_elemento():
+                    break  # Salir del bucle si se realizó una búsqueda
+            elif opcion == 'o':
+                ordenar_datos()
+            elif opcion == 's':
+                break
+            else:
+                print("Opción no válida. Intente nuevamente.")
+        else:
+            break
+
+def mostrar_productos(productos):
     print("Inventario actual:")
     headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
     datos_productos = [[codigo, producto["nombre"], producto["categoria"], 
                         f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
                         f"${producto['precio']['valor']}",  # Aquí se añade el símbolo $
                         producto["proveedor_id"], producto["fecha_vencimiento"]]
-                    for codigo, producto in inventario["productos"].items()]
+                    for codigo, producto in productos.items()]
     mostrar_tabla(datos_productos, headers_productos)
 
-    print("\nMetadatos del inventario:")
-    headers_metadatos = ["Metadatos", "Valores"]
-    datos_metadatos = [
-        ["Versión", inventario['metadata'].get('version', 'N/A')],
-        ["Última actualización", inventario['metadata'].get('ultima_actualizacion', 'N/A')],
-        ["Total de productos", inventario['metadata'].get('total_productos', 0)],
-        ["Total de proveedores", inventario['metadata'].get('total_proveedores', 0)],
-        ["Valor total del inventario (ARS)", f"${inventario['metadata'].get('valor_total_inventario', 0.0):.2f}"]
-    ]
-    mostrar_tabla(datos_metadatos, headers_metadatos)
-
-    print("\nInformación de proveedores:")
-    headers_proveedores = ["ID", "Nombre", "Dirección", "Teléfono", "Email"]
-    datos_proveedores = [[prov_id, proveedor["nombre"], proveedor["direccion"], proveedor["telefono"], proveedor["email"]]
-                         for prov_id, proveedor in inventario["proveedores"].items()]
-    mostrar_tabla(datos_proveedores, headers_proveedores)
 
 def mostrar_proveedores():
     inventario = cargar_inventario()
@@ -148,7 +222,7 @@ def mostrar_proveedores():
     return proveedores
 
 #Da el formato al proveedor
-def crear_nombre_proveedor(codigo_proveedor,inventario ):
+def crear_nombre_proveedor(inventario):
     return f"PROV{len(inventario['proveedores']) + 1:03}"
 
 def agregar_nuevo_proveedor(inventario):
@@ -159,7 +233,7 @@ def agregar_nuevo_proveedor(inventario):
     email = input("Email del proveedor: ").strip()
 
     #crea un codigo para el proveedor
-    codigo_proveedor = crear_nombre_proveedor(codigo_proveedor,inventario)
+    codigo_proveedor = crear_nombre_proveedor(inventario)
 
     #agrega el nuevo proveedor al inventario
     inventario["proveedores"][codigo_proveedor] = {
@@ -364,20 +438,6 @@ def buscar_producto(id_producto):
 
         mostrar_tabla(datos_encontrados, headers_productos)
         mostrar_resumen(encontrados)
-
-# Funcion que muestra los productos en una tabla usando la lib tabulate y agrega paginacion
-def mostrar_tabla(datos, headers, page_size=5): 
-    #paginacion
-    total_paginas = (len(datos) + page_size - 1) // page_size  #calcula numero de páginas
-    for page in range(total_paginas):
-        inicio = page * page_size
-        fin = inicio + page_size
-        print(tabulate(datos[inicio:fin], headers=headers, tablefmt="grid"))
-        
-        if page < total_paginas - 1:
-            continuar_pagina = input("Mostrar siguiente página? (s/n): ")
-            if continuar_pagina.lower() != "s":
-                break  
 
 # Funcion que muestra un resumen de los productos encontrados
 def mostrar_resumen(productos):
@@ -622,6 +682,16 @@ def menu_edicion():
     print("| 5. Proveedor                   |")
     print("| -1. Volver al menú principal   |")
     print(" --------------------------------\n")
+    
+def alumnos():
+    matriz = [
+        ["Brayan Zorro"],
+        ["Luana Kaladjian"],
+        ["Gabriel Pabón"],
+        ["Estefanía Sassone"]
+    ]
+    headers = ["Nombre del Alumno"]
+    mostrar_tabla(matriz, headers)
 
 
 # Función para continuar con la ejecución del programa
@@ -640,7 +710,7 @@ def main():
         os.system('cls' if os.name == 'nt' else 'clear') #limpia la pantalla
         print("")                
         if opcion == "1":
-            ver_inventario(cargar_inventario)
+            ver_inventario()
             continuar()
         
         if opcion == "2":

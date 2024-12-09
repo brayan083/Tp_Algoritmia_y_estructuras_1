@@ -1,0 +1,280 @@
+{
+    "productos": {
+        "001": {
+            "nombre": "pan2",
+            "categoria": "Panadería",
+            "cantidad": {
+                "valor": 400,
+                "unidad": "unidades"
+            },
+            "precio": {
+                "valor": 35,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "fecha_vencimiento": "12-12-1222",
+            "fecha_ultima_actualizacion": "2024/19/11"
+        },
+        "1003": {
+            "nombre": "Trigo",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 202,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 130.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "sancor",
+            "fecha_vencimiento": "24-11-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1004": {
+            "nombre": "Arroz",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 15,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 2200.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "molinos",
+            "fecha_vencimiento": "28-11-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1005": {
+            "nombre": "Dulce de leche",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 344,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 25000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "La serenisima",
+            "fecha_vencimiento": "30-12-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1006": {
+            "nombre": "Galletitas de trigo",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 250,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 24.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Granix",
+            "fecha_vencimiento": "11-10-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1007": {
+            "nombre": "Fideos",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 780,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 153000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Lucchetti",
+            "fecha_vencimiento": "08-02-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1008": {
+            "nombre": "Yogur",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 18,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1390.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "La serenisima",
+            "fecha_vencimiento": "10-08-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1009": {
+            "nombre": "Galletas de arroz",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 20,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1200.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Cerealitas",
+            "fecha_vencimiento": "24-12-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1010": {
+            "nombre": "Copos de maiz",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 24,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 570.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "Granix",
+            "fecha_vencimiento": "23-09-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1011": {
+            "nombre": "Chocolate en barra",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 40,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 4500.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "fecha_vencimiento": "24-11-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1012": {
+            "nombre": "Cotufas",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 100,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 5000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV007",
+            "fecha_vencimiento": "12-11-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1013": {
+            "nombre": "Terrabusi",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 200,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 4000.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV007",
+            "fecha_vencimiento": "25-01-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1014": {
+            "nombre": "Harina pan",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 500,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1700.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV004",
+            "fecha_vencimiento": "03-10-2026",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1015": {
+            "nombre": "Chocolinas",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 255,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 1255.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV005",
+            "fecha_vencimiento": "03-04-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1016": {
+            "nombre": "Pure de tomate",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 980,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 650.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV005",
+            "fecha_vencimiento": "24-07-2027",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1017": {
+            "nombre": "Silla",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 12,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 23.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "fecha_vencimiento": "12-12-1222",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1018": {
+            "nombre": "Pepe",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 12,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 12.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "fecha_vencimiento": "12-12-1212",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1019": {
+            "nombre": "Casc",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 21,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 12.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV001",
+            "fecha_vencimiento": "12-12-1221",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        }
+    },
+    "metadata": {
+        "version": "1.1",
+        "ultima_actualizacion": "2024-11-03T05:05:00Z",
+        "total_productos": 18,
+        "valor_total_inventario": 195.0
+    }
+}

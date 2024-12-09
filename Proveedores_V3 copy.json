@@ -1,0 +1,63 @@
+{
+    "proveedores": {
+        "PROV001": {
+            "nombre": "Panadería UADE",
+            "direccion": "Av. Independencia 1234",
+            "telefono": "+54 11 1234-5678",
+            "email": "contacto@panaderiauade.com"
+        },
+        "PROV002": {
+            "nombre": "UADE Lácteos",
+            "direccion": "Calle Rivadavia 5678",
+            "telefono": "+54 11 8765-4321",
+            "email": "info@uadelacteos.com"
+        },
+        "PROV003": {
+            "nombre": "Ledesma",
+            "direccion": "Calle Sarmiento 570",
+            "telefono": "+54 11 7890-4024",
+            "email": "info@ledesma.com"
+        },
+        "PROV004": {
+            "nombre": "Playadito",
+            "direccion": "Cooperativa Agricola",
+            "telefono": "+54 9 03758 – 422182",
+            "email": "atconsumidores@cooperativaliebig.com.ar"
+        },
+        "PROV005": {
+            "nombre": "Arcor",
+            "direccion": "Calle Alberti 780",
+            "telefono": "0800-333-3033",
+            "email": "arcor@arcor.com"
+        },
+        "PROV006": {
+            "nombre": "Fabi Corps",
+            "direccion": "Independencia",
+            "telefono": "1234-5678",
+            "email": "fabiancorpsoficial@gmail.com"
+        },
+        "PROV007": {
+            "nombre": "Luana Industrys",
+            "direccion": "Constitución",
+            "telefono": "+54 11 1234-7878",
+            "email": "LuanaIndustrys@gmail.com"
+        },
+        "PROV008": {
+            "nombre": "UADE FARM",
+            "direccion": "Monserrat",
+            "telefono": "+54 11 1212-3434",
+            "email": "uadeFarm@uade.edu.ar"
+        },
+        "PROV009": {
+            "nombre": "Brayan Industrys",
+            "direccion": "Merlo",
+            "telefono": "+54 9 11 6666 6666",
+            "email": "brayancito@gmail.com"
+        }
+    },
+    "metadata": {
+        "version": "1.1",
+        "ultima_actualizacion": "2024-11-03T05:05:00Z",
+        "total_proveedores": 9
+    }
+}

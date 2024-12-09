@@ -1,0 +1,21 @@
+{
+    "proveedores": {
+        "PROV001": {
+            "nombre": "Panadería UADE",
+            "direccion": "Av. Independencia 1234",
+            "telefono": "+54 11 1234-5678",
+            "email": "contacto@panaderiauade.com"
+        },
+        "PROV002": {
+            "nombre": "UADE Lácteos",
+            "direccion": "Calle Rivadavia 5678",
+            "telefono": "+54 11 8765-4321",
+            "email": "info@uadelacteos.com"
+        }
+    },
+    "metadata": {
+        "version": "1.1",
+        "ultima_actualizacion": "2024-11-03T05:05:00Z",
+        "total_proveedores": 9
+    }
+}
