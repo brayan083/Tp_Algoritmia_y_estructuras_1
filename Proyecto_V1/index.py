@@ -225,6 +225,23 @@ def mostrar_proveedores():
 def crear_nombre_proveedor(inventario):
     return f"PROV{len(inventario['proveedores']) + 1:03}"
 
+def seleccionar_proveedor(proveedores, inventario):
+    while True:
+        print("\n--- Proveedores disponibles ---")
+        for codigo, datos in proveedores.items():
+            print(f"Código: {codigo} - Nombre: {datos['nombre']}")
+        
+        print("\nIngrese el código del proveedor elegido o escriba '1' para agregar un nuevo proveedor:")
+        codigo_proveedor = input("Código del proveedor: ").strip().upper()
+
+        if codigo_proveedor in proveedores:
+            return codigo_proveedor, proveedores[codigo_proveedor]["nombre"]
+        elif codigo_proveedor == "1":
+            codigo_proveedor, nombre_proveedor = agregar_nuevo_proveedor(inventario)
+            return codigo_proveedor, nombre_proveedor
+        else:
+            print("Código inválido. Intente nuevamente.")
+
 def agregar_nuevo_proveedor(inventario):
     print("\n--- Agregar Nuevo Proveedor ---")
     nombre_proveedor = input("Nombre del proveedor: ").strip()
@@ -232,10 +249,10 @@ def agregar_nuevo_proveedor(inventario):
     telefono = input("Teléfono del proveedor: ").strip()
     email = input("Email del proveedor: ").strip()
 
-    #crea un codigo para el proveedor
+    # Crea un código para el proveedor
     codigo_proveedor = crear_nombre_proveedor(inventario)
 
-    #agrega el nuevo proveedor al inventario
+    # Agrega el nuevo proveedor al inventario
     inventario["proveedores"][codigo_proveedor] = {
         "nombre": nombre_proveedor,
         "direccion": direccion,
@@ -247,22 +264,6 @@ def agregar_nuevo_proveedor(inventario):
     print(f"Proveedor '{nombre_proveedor}' agregado exitosamente con el código {codigo_proveedor}.")
     
     return codigo_proveedor, nombre_proveedor
-
-def seleccionar_proveedor(proveedores, inventario):
-    while True:
-        print("\nProveedores disponibles:")
-        for codigo, datos in proveedores.items():
-            print(f"Código: {codigo} - Nombre: {datos['nombre']}")
-        
-        print("\nIngrese el código del proveedor elegido o escriba '1' para agregar un nuevo proveedor:")
-        codigo_proveedor = input("Código del proveedor: ").strip().upper()
-
-        if codigo_proveedor in proveedores:
-            return codigo_proveedor, proveedores[codigo_proveedor]["nombre"]
-        elif codigo_proveedor == "1" or codigo_proveedor == 1:
-            return agregar_nuevo_proveedor(inventario)
-        else:
-            print("Código inválido. Intente nuevamente.")
 
 def buscarProveedores(id_proveedor):
     inventario = cargar_inventario()
@@ -290,6 +291,7 @@ def buscarProveedores(id_proveedor):
                              for codigo, proveedor in encontrados.items()]
         
         mostrar_tabla(datos_encontrados, headers_proveedores)
+        
 def cambiar_proveedor(proveedores, inventario, codigo_producto):
     lista_proveedores = []
     productos = inventario['productos']
@@ -317,14 +319,16 @@ def cambiar_proveedor(proveedores, inventario, codigo_producto):
 
 def agregar_producto(nombre, cantidad, precio, fecha):
     inventario = cargar_inventario()
-    proveedores = mostrar_proveedores()
+    proveedores = inventario["proveedores"]
     productos = inventario["productos"]
+    
     if not proveedores:
         print("No se puede agregar el producto sin proveedores.")
         return
 
     proveedor_codigo, proveedor_nombre = seleccionar_proveedor(proveedores, inventario)
-    #crea un codigo unico para cada prod
+    
+    # Crea un código único para cada producto
     codigo = generar_codigo_unico(inventario)
     if codigo in productos:
         print(f"Error: El código {codigo} ya existe. No se puede agregar el producto.")
@@ -340,12 +344,12 @@ def agregar_producto(nombre, cantidad, precio, fecha):
         print("La fecha de vencimiento no es válida.")
         return
     
-    #formatea la fecha de vencimiento
+    # Formatea la fecha de vencimiento
     fecha = formatear(procesar_fecha(fecha))
     
     producto = {
         "nombre": nombre.capitalize(),
-        "categoria": "General",  #se puede cambiar esta categoria predeterminada
+        "categoria": "General",  # Se puede cambiar esta categoría predeterminada
         "cantidad": {"valor": cantidad, "unidad": "unidad"},
         "precio": {"valor": precio, "moneda": "ARS"},
         "proveedor_id": proveedor_codigo,
@@ -361,7 +365,7 @@ def agregar_producto(nombre, cantidad, precio, fecha):
     print(f"Producto '{nombre}' agregado exitosamente con el código {codigo}.")
 
 
-def procesar_fecha(fecha): #No usar esta (se usa en es_fecha_valida)
+def procesar_fecha(fecha):
     if fecha.find('-') != -1:
         dia, mes, anio = fecha.split("-")
     elif fecha.find('/') != -1:

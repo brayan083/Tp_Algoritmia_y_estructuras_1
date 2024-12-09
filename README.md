@@ -9,7 +9,16 @@
     <img src="https://badgen.net/badge/library/tabulate/cyan" alt="Tabulate Badge"/></a>
 </p>
 
-<p> Este proyecto implementa un sistema de inventario utilizando Python que permite a los usuarios gestionar productos, proveedores y datos del inventario, almacenados en un archivo JSON; ademas permite generar reportes utilizando los datos del inventario. </p>
+## Descripción de los archivos 📂
+
+- **main.py**: Archivo principal que ejecuta el programa.
+- **inventario.py**: Funciones relacionadas con la carga y guardado del inventario.
+- **proveedores.py**: Funciones relacionadas con la gestión de proveedores.
+- **productos.py**: Funciones relacionadas con la gestión de productos.
+- **utilidades.py**: Funciones auxiliares y utilidades generales.
+- **datos/**: Carpeta que contiene los archivos JSON de productos y proveedores.
+
+<p> Este proyecto implementa un sistema de inventario utilizando Python que permite a los usuarios gestionar productos, proveedores y datos del inventario, almacenados en un archivo JSON; además permite generar reportes utilizando los datos del inventario. </p>
 
 ## Funcionalidades 🔍
 <ul>
