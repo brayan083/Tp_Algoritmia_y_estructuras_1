@@ -400,7 +400,6 @@ def actualizar_cantidad(codigo, nueva_cantidad):
 
 #Funcion para borrar un producto
 def borrar_producto(producto_codigo):
-    comprobar = True
     try:
         inventario = cargar_inventario()
         productos = inventario.get("productos", {}) # Verificar si el producto existe en los productos
@@ -409,18 +408,26 @@ def borrar_producto(producto_codigo):
         if producto_codigo in productos:
             producto = productos[producto_codigo]
             nombre_producto = producto["nombre"]
-            while comprobar:
-                validar_borrado = input(f"¿Esta seguro de querer borrar este producto: {nombre_producto}? (si o no) \n Escriba su opcion aqui: ")
+
+            #Cumple la funcion del While en la anterior version
+            def validar_borrado():
+                validar_borrado = input(f"¿Está seguro de querer borrar este producto: {nombre_producto}? (si o no) \n Escriba su opción aquí: ")
                 validar_borrado = validar_borrado.lower()
                 if validar_borrado == 'si':
-                    comprobar = False
+                    return True
+                elif validar_borrado == 'no':
+                    return False
                 else:
-                    if validar_borrado == 'no':
-                        return
-            del productos[producto_codigo]
-            print(f"Producto: {producto['nombre']} borrado exitosamente.")
-            inventario["metadata"]["total_productos"] = len(inventario["productos"])
-            guardar_inventario(inventario)
+                    print("Opción no válida, intente nuevamente.")
+                    return validar_borrado()
+                    
+            if validar_borrado():  #Confirma que se elimina el producto
+                del productos[producto_codigo]
+                print(f"Producto: {producto['nombre']} borrado exitosamente.")
+                inventario["metadata"]["total_productos"] = len(inventario["productos"])
+                guardar_inventario(inventario)
+            else:
+                print("Operación cancelada.")
         else:
             print("Producto no encontrado en el inventario.")
     
