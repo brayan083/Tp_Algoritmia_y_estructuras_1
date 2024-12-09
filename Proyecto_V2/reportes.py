@@ -68,17 +68,28 @@ def reporte_productos_por_proveedor(proveedor):
 
 # Función para mostrar los productos más caros
 def reporte_productos_mas_caros():
-    inventario = cargar_inventario()
-    productos_mas_caros = dict(sorted(inventario['productos'].items(), key=lambda x: x[1]['precio']['valor'], reverse=True)[:5])
+    try:
+        inventario = cargar_inventario()
+        if 'productos' not in inventario:
+            raise KeyError("El inventario no contiene la clave 'productos'.")
 
-    if productos_mas_caros:
-        print(f"Top 5 productos más caros:")
-        headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
-        datos_productos = [[codigo, producto["nombre"], producto["categoria"],
-                            f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
-                            f"${producto['precio']['valor']}",  # Formatear el precio con el signo de $
-                            producto["proveedor_id"], producto["fecha_vencimiento"]]
-                           for codigo, producto in productos_mas_caros.items()]
-        mostrar_tabla(datos_productos, headers_productos)
-    else:
-        print(f"No se encontraron productos")
+        productos_mas_caros = dict(sorted(inventario['productos'].items(), key=lambda x: x[1]['precio']['valor'], reverse=True)[:5])
+
+        if productos_mas_caros:
+            print(f"Top 5 productos más caros:")
+            headers_productos = ["Código", "Nombre", "Categoría", "Cantidad", "Precio (ARS)", "Proveedor", "Fecha de Vencimiento"]
+            datos_productos = [[codigo, producto["nombre"], producto["categoria"],
+                                f"{producto['cantidad']['valor']} {producto['cantidad']['unidad']}",
+                                f"${producto['precio']['valor']}",  # Formatear el precio con el signo de $
+                                producto["proveedor_id"], producto["fecha_vencimiento"]]
+                               for codigo, producto in productos_mas_caros.items()]
+            mostrar_tabla(datos_productos, headers_productos)
+        else:
+            print(f"No se encontraron productos")
+
+    except KeyError as e:
+        print(f"Error en la estructura del inventario: {e}")
+    except TypeError as e:
+        print(f"Error al procesar los datos del inventario: {e}")
+    except Exception as e:
+        print(f"Se produjo un error inesperado: {e}")
