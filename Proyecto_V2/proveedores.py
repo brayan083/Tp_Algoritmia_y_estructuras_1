@@ -46,9 +46,7 @@ def agregar_nuevo_proveedor(inventario):
     return codigo_proveedor
 
 def mostrar_proveedores(proveedores, nav=False):
-    # Aquí puedes importar mostrar_tabla justo antes de usarla
     from productos import mostrar_tabla
-    
     print("\nInformación de proveedores:")
     headers_proveedores = ["ID", "Nombre", "Dirección", "Teléfono", "Email"]
     datos_proveedores = [[prov_id, proveedor["nombre"], proveedor["direccion"], proveedor["telefono"], proveedor["email"]]
@@ -56,9 +54,7 @@ def mostrar_proveedores(proveedores, nav=False):
     mostrar_tabla(datos_proveedores, headers_proveedores, navegar=nav)
     
 def buscarProveedores(id_proveedor):
-    # Aquí puedes importar mostrar_tabla justo antes de usarla
     from productos import mostrar_tabla
-    
     inventario = cargar_inventario()
     proveedores = inventario.get("proveedores", {})
 
@@ -84,7 +80,7 @@ def buscarProveedores(id_proveedor):
                              for codigo, proveedor in encontrados.items()]
         
         mostrar_tabla(datos_encontrados, headers_proveedores)
-        
+
 
 def cambiar_proveedor(inventario, codigo_producto):
     lista_proveedores = []

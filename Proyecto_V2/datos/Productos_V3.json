@@ -331,19 +331,19 @@
             "fecha_ultima_actualizacion": "01-01-2024"
         },
         "1024": {
-            "nombre": "2131",
+            "nombre": "test",
             "categoria": "General",
             "cantidad": {
-                "valor": 2131,
+                "valor": 2,
                 "unidad": "unidad"
             },
             "precio": {
-                "valor": 12.0,
+                "valor": 32,
                 "moneda": "ARS"
             },
-            "proveedor_id": "PROV013",
+            "proveedor_id": "PROV010",
             "fecha_vencimiento": "12-01-2025",
-            "fecha_ultima_actualizacion": "01-01-2024"
+            "fecha_ultima_actualizacion": "2024/10/12"
         }
     }
 }

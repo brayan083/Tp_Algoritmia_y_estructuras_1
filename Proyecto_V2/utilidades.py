@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-#from utilidades_inventario import Buscarpalabras
 
 def limpiar_consola():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -32,16 +31,7 @@ def validar_fecha(fecha):
     except ValueError:
         print("La fecha debe tener el formato DD-MM-YYYY.")
         return False
-
-"""    
-def validar_producto():
-    while(True):
-        nombre = input("Ingrese el nombre: ")
-        if Buscarpalabras(nombre) is None:
-            return nombre
-        print('\nEl nombre ya existe!\n')
-"""
-        
+   
 def input_fecha_validada():
     while True:
         fecha = input("Ingrese la fecha de vencimiento (DD-MM-YYYY): ")
