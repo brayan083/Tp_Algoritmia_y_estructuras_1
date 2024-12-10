@@ -110,6 +110,16 @@ def validar_fecha(fecha):
         return False
     if not (1 <= dia <= dias_por_mes[mes - 1]):
         return False
+    
+    #validar que la fecha no sea anterior a la fecha actual
+    try:
+        fecha_vencimiento = datetime(anio, mes, dia)
+        fecha_actual = datetime.now()
+        if fecha_vencimiento < fecha_actual:
+            return False
+    except ValueError:
+        return False
+
     return True
 
 # Función para ver el inventario
@@ -223,6 +233,7 @@ def mostrar_proveedores():
 
 #Da el formato al proveedor
 def crear_nombre_proveedor(inventario):
+def crear_nombre_proveedor(inventario): #codigo_proveedor,
     return f"PROV{len(inventario['proveedores']) + 1:03}"
 
 def seleccionar_proveedor(proveedores, inventario):
@@ -249,6 +260,8 @@ def agregar_nuevo_proveedor(inventario):
     telefono = input("Teléfono del proveedor: ").strip()
     email = input("Email del proveedor: ").strip()
 
+    #crea un codigo para el proveedor
+    codigo_proveedor = crear_nombre_proveedor(inventario) #codigo_proveedor,
     # Crea un código para el proveedor
     codigo_proveedor = crear_nombre_proveedor(inventario)
 
@@ -291,6 +304,7 @@ def buscarProveedores(id_proveedor):
                              for codigo, proveedor in encontrados.items()]
         
         mostrar_tabla(datos_encontrados, headers_proveedores)
+
         
 def cambiar_proveedor(proveedores, inventario, codigo_producto):
     lista_proveedores = []
@@ -326,6 +340,8 @@ def agregar_producto(nombre, cantidad, precio, fecha):
         print("No se puede agregar el producto sin proveedores.")
         return
 
+    proveedor_codigo, _ = seleccionar_proveedor(proveedores, inventario)
+    #crea un codigo unico para cada prod
     proveedor_codigo, proveedor_nombre = seleccionar_proveedor(proveedores, inventario)
     
     # Crea un código único para cada producto
@@ -353,7 +369,7 @@ def agregar_producto(nombre, cantidad, precio, fecha):
         "cantidad": {"valor": cantidad, "unidad": "unidad"},
         "precio": {"valor": precio, "moneda": "ARS"},
         "proveedor_id": proveedor_codigo,
-        "proveedor_nombre": proveedor_nombre,
+        #"proveedor_nombre": proveedor_nombre,
         "fecha_vencimiento": fecha,
         "fecha_ultima_actualizacion": formatear(procesar_fecha("01-01-2024"))
     }
@@ -717,7 +733,7 @@ def main():
             ver_inventario()
             continuar()
         
-        if opcion == "2":
+        if opcion == "2": #agregar producto
             nombre = validar_producto()
             cantidad = int(input("Ingrese la cantidad: "))
             precio = float(input("Ingrese el precio: "))

@@ -278,6 +278,36 @@
             "proveedor_nombre": "Panader\u00eda UADE",
             "fecha_vencimiento": "12-12-1221",
             "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1020": {
+            "nombre": "Frutigran",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 4,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 2300.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV010",
+            "fecha_vencimiento": "25-11-2025",
+            "fecha_ultima_actualizacion": "01-01-2024"
+        },
+        "1021": {
+            "nombre": "Granola",
+            "categoria": "General",
+            "cantidad": {
+                "valor": 2,
+                "unidad": "unidad"
+            },
+            "precio": {
+                "valor": 2544.0,
+                "moneda": "ARS"
+            },
+            "proveedor_id": "PROV010",
+            "fecha_vencimiento": "08-12-2024",
+            "fecha_ultima_actualizacion": "01-01-2024"
         }
     },
     "proveedores": {
@@ -334,12 +364,18 @@
             "direccion": "Merlo",
             "telefono": "+54 9 11 6666 6666",
             "email": "brayancito@gmail.com"
+        },
+        "PROV010": {
+            "nombre": "Granix",
+            "direccion": "Av. Independencia 1050",
+            "telefono": "11 4730 800",
+            "email": "consumidor@granix.com.ar"
         }
     },
     "metadata": {
         "version": "1.1",
         "ultima_actualizacion": "2024-11-03T05:05:00Z",
-        "total_productos": 18,
+        "total_productos": 20,
         "total_proveedores": 2,
         "valor_total_inventario": 195.0
     }
