@@ -1,7 +1,7 @@
 from functools import reduce
 import re
-
 from tabulate import tabulate
+
 from inventario import cargar_inventario, guardar_inventario, registrar_error
 from proveedores import seleccionar_proveedor
 from utilidades import continuar, generar_codigo_unico, input_fecha_validada, limpiar_consola, validar_cantidad, validar_precio, validar_fecha, formatear, procesar_fecha
