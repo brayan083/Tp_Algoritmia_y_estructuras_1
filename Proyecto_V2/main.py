@@ -1,7 +1,8 @@
 from inventario import cargar_inventario, ver_inventario
 from productos import agregar_producto, borrar_producto, buscar_producto, mostrar_tabla
 from proveedores import cambiar_proveedor, mostrar_proveedores, buscarProveedores
-from utilidades import actualizar_cantidad, continuar, editar_fecha, editar_nombre, editar_precio, input_fecha_validada, limpiar_consola, verificar_codigo_producto
+from utilidades import continuar, input_fecha_validada, limpiar_consola
+from utilidades_inventario import actualizar_cantidad, editar_fecha, editar_nombre, editar_precio, verificar_codigo_producto
 from menus import menu_opciones, menu_reportes, menu_edicion
 from reportes import reporte_productos_mas_caros, reporte_productos_por_proveedor, reporte_total_productos, reporte_total_unidades, reporte_valor_inventario
 import os

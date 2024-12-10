@@ -1,4 +1,4 @@
-from utilidades import validar_cantidad, validar_precio, validar_fecha
+from utilidades import validar_cantidad, validar_precio, validar_fecha, generar_codigo_unico
 
 def test_validar_cantidad():
     #success
@@ -27,3 +27,32 @@ def test_validar_fecha():
     assert validar_fecha("2024-12-25") == False, "Error, '2024-12-25' no es un formato de fecha valido"
     assert validar_fecha("abc-def-ghi") == False, "Error, 'abcd-ef-gh' no es un formato de fecha valido"
     assert validar_fecha("31-02-2024") == False, "Error, '28-02-2024' no es una fecha valida ya que no es una fecha mayor o igual a la fecha actual"
+
+def test_generar_codigo_unico():
+
+    #Caso 1: inventario con productos
+    inventario = {
+        'productos': {
+            '1001': {'nombre': 'Arroz'},
+            '1002': {'nombre': 'Harina'},
+            '1003': {'nombre': 'Aceite'}
+        }
+    }
+    #El codigo siguiente debe ser 1004
+    assert generar_codigo_unico(inventario) == '1004', "Error, el codigo generado debería ser 1004"
+
+    #Caso 2: inventario vacío
+    inventario_vacio = {
+        'productos': {}
+    }
+    #El codigo siguiente debe ser 1001, porque el valor base es 1000 y le sumamos 1
+    assert generar_codigo_unico(inventario_vacio) == '1001', "Error, el codigo generado debe ser 1001"
+
+    #Caso 3: inventario con un solo producto y codigo 1000
+    inventario_con_producto_base = {
+        'productos': {
+            '1000': {'nombre': 'Cafe'}
+        }
+    }
+    #El codigo siguiente debe ser 1001
+    assert generar_codigo_unico(inventario_con_producto_base) == '1001', "Error, el codigo generado debe ser 1001"
