@@ -108,7 +108,7 @@ def editar_precio(codigo,nuevo_precio):
         guardar_inventario(inventario)
         return nombre_producto
 
-# Función para actualizar la cantidad de un producto !!!!!!!!!!!!!!
+#actualiza la cantidad de un producto
 def actualizar_cantidad(codigo, nueva_cantidad):
     inventario = cargar_inventario()
     productos = inventario['productos']
