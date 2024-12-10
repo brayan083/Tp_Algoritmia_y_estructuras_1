@@ -232,7 +232,6 @@ def mostrar_proveedores():
     return proveedores
 
 #Da el formato al proveedor
-def crear_nombre_proveedor(inventario):
 def crear_nombre_proveedor(inventario): #codigo_proveedor,
     return f"PROV{len(inventario['proveedores']) + 1:03}"
 
