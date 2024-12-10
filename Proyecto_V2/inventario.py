@@ -52,19 +52,7 @@ def guardar_inventario(inventario):
     except IOError as e:
         registrar_error(e)
         print(f"Error al guardar los proveedores: {e}")
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+               
 from productos import mostrar_tabla
 
 # Función para ver el inventario
